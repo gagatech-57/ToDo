@@ -102,9 +102,23 @@ export default function TodoForm({
 
   return (
     <div className="glass-panel todo-form-card fade-in">
-      <h3 className="todo-form-title">
-        <ClipboardList size={20} style={{ color: 'var(--primary)' }} />
-        <span>{editingTodo ? 'Edit Task Details' : 'Create New Task'}</span>
+      <h3 className="todo-form-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ClipboardList size={20} style={{ color: 'var(--primary)' }} />
+          <span>{editingTodo ? 'Edit Task Details' : 'Create New Task'}</span>
+        </div>
+        <button
+          type="button"
+          className="btn-icon"
+          style={{ width: '28px', height: '28px', border: 'none', background: 'transparent' }}
+          onClick={() => {
+            resetForm();
+            onCancelEdit();
+          }}
+          title="Close Form"
+        >
+          <X size={16} />
+        </button>
       </h3>
 
       <form onSubmit={handleSubmit}>

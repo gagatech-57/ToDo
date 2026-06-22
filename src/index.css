@@ -1,88 +1,108 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Common variables */
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --primary-glow-color: 99, 102, 241;
-  --success: #10b981;
-  --success-glow: rgba(16, 185, 129, 0.15);
-  --warning: #f59e0b;
-  --warning-glow: rgba(245, 158, 11, 0.15);
-  --danger: #ef4444;
-  --danger-glow: rgba(239, 68, 68, 0.15);
-  --info: #0ea5e9;
-  --accent-purple: #8b5cf6;
+  /* Apple iOS/macOS Brand Color Palette (Royal Blue in Light Mode) */
+  --primary: var(--royal-blue);
+  --primary-hover: #123788;
+  --primary-glow-color: 14, 47, 118;
+  --success: #34c759; /* Apple Green */
+  --success-glow: rgba(52, 199, 89, 0.15);
+  --warning: #ff9500; /* Apple Orange */
+  --warning-glow: rgba(255, 149, 0, 0.15);
+  --danger: #ff3b30; /* Apple Red */
+  --danger-glow: rgba(255, 59, 48, 0.15);
+  --info: #5ac8fa; /* Apple Light Blue */
+  --accent-purple: #af52de; /* Apple Purple */
+  --accent-pink: #ff2d55; /* Apple Pink */
   
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  
-  --transition-fast: 0.2s ease;
-  --transition-normal: 0.3s ease;
-  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  /* User Custom Palette variables */
+  --royal-blue: #0E2F76;
+  --powder-blue: #A9C0E0;
+  --ice-white: #F4FEFF;
 
-  /* Glass Light Theme Variables */
-  --bg-primary: #f1f5f9;
-  --bg-secondary: rgba(255, 255, 255, 0.35);
-  --bg-card: rgba(255, 255, 255, 0.45);
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
-  --border-color: rgba(255, 255, 255, 0.4);
-  --border-focus: rgba(99, 102, 241, 0.3);
-  --glass-blur: blur(20px);
-  --primary-glow: rgba(99, 102, 241, 0.05);
-  --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07), inset 0 1px 1px rgba(255, 255, 255, 0.8);
-  --sidebar-shadow: 1px 0 0 0 rgba(255, 255, 255, 0.2);
-  --todo-item-bg: rgba(255, 255, 255, 0.5);
-  --scrollbar-track: rgba(255, 255, 255, 0.1);
-  --scrollbar-thumb: rgba(148, 163, 184, 0.3);
-  --scrollbar-thumb-hover: rgba(148, 163, 184, 0.5);
+  /* Smooth iOS Radii */
+  --radius-xs: 8px;
+  --radius-sm: 14px;
+  --radius-md: 24px; /* iOS standard widget corner radius */
+  --radius-lg: 32px; /* iOS panel corner radius */
+  
+  /* System transitions */
+  --transition-fast: 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-slow: 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* iOS Light Glass Theme variables (Overridden with Royal Blue/Powder Blue/Ice White Palette) */
+  --bg-primary: var(--ice-white); /* Main Background is Ice White */
+  --bg-secondary: rgba(169, 192, 224, 0.18); /* Powder Blue semi-translucent */
+  --bg-card: rgba(255, 255, 255, 0.65); /* Cards, Divs, Sections */
+  --text-primary: var(--royal-blue); /* Primary Text & Headings */
+  --text-secondary: #4a5c82; /* Soft Royal Blue */
+  --text-tertiary: #7c8ea6;
+  --border-color: rgba(169, 192, 224, 0.45); /* Powder Blue Borders */
+  --border-focus: var(--royal-blue);
+  --glass-blur: blur(35px);
+  --primary-glow: rgba(14, 47, 118, 0.06);
+  --card-shadow: 0 10px 40px -10px rgba(14, 47, 118, 0.06), 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 -1px 0 rgba(0, 0, 0, 0.02) inset;
+  --sidebar-shadow: 1px 0 0 0 rgba(169, 192, 224, 0.3);
+  --todo-item-bg: rgba(255, 255, 255, 0.75);
+  --scrollbar-track: rgba(169, 192, 224, 0.1);
+  --scrollbar-thumb: rgba(169, 192, 224, 0.45);
+  --scrollbar-thumb-hover: rgba(14, 47, 118, 0.25);
 }
 
 [data-theme="dark"] {
-  /* Glass Dark Theme Variables */
-  --bg-primary: #05070f;
-  --bg-secondary: rgba(17, 24, 39, 0.4);
-  --bg-card: rgba(15, 23, 42, 0.55);
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-tertiary: #64748b;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(99, 102, 241, 0.5);
-  --glass-blur: blur(25px);
-  --primary-glow: rgba(99, 102, 241, 0.15);
-  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  /* iOS Dark Glass Theme variables */
+  --primary: #007aff; /* Restore Apple Blue for Dark Mode */
+  --primary-hover: #1485ff;
+  --primary-glow-color: 0, 122, 255;
+  --bg-primary: #000000; /* Apple True Black background */
+  --bg-secondary: rgba(28, 28, 30, 0.35);
+  --bg-card: rgba(28, 28, 30, 0.45);
+  --text-primary: #f2f2f7;
+  --text-secondary: #8e8e93;
+  --text-tertiary: #48484a;
+  --border-color: rgba(255, 255, 255, 0.07);
+  --border-focus: rgba(0, 122, 255, 0.5);
+  --glass-blur: blur(40px);
+  --primary-glow: rgba(0, 122, 255, 0.15);
+  --card-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 -1px 0 rgba(0, 0, 0, 0.4) inset;
   --sidebar-shadow: 1px 0 0 0 rgba(255, 255, 255, 0.03);
-  --todo-item-bg: rgba(30, 41, 59, 0.4);
-  --scrollbar-track: rgba(0, 0, 0, 0.2);
-  --scrollbar-thumb: rgba(156, 163, 175, 0.15);
-  --scrollbar-thumb-hover: rgba(156, 163, 175, 0.3);
+  --todo-item-bg: rgba(44, 44, 46, 0.35);
+  --scrollbar-track: rgba(0, 0, 0, 0.3);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.1);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.2);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
-  overflow-x: hidden;
   position: relative;
   transition: background-color var(--transition-slow), color var(--transition-normal);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Outfit', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Outfit', sans-serif;
   font-weight: 600;
+  letter-spacing: -0.5px;
 }
 
-/* Glassmorphism Background Blobs */
+/* Apple Gradient Background Blobs */
 .glass-bg-blobs {
   position: fixed;
   top: 0;
@@ -97,76 +117,75 @@ h1, h2, h3, h4, h5, h6 {
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(110px);
-  opacity: 0.5;
+  filter: blur(120px);
+  opacity: 0.45;
   transition: background var(--transition-slow);
 }
 
-/* Float animations for blobs */
+/* float movements */
 @keyframes float1 {
   0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(80px, 60px) scale(1.15); }
+  50% { transform: translate(120px, 80px) scale(1.2); }
   100% { transform: translate(0, 0) scale(1); }
 }
 
 @keyframes float2 {
   0% { transform: translate(0, 0) scale(1.1); }
-  50% { transform: translate(-60px, 90px) scale(0.9); }
+  50% { transform: translate(-100px, 120px) scale(0.85); }
   100% { transform: translate(0, 0) scale(1.1); }
 }
 
 @keyframes float3 {
   0% { transform: translate(0, 0) scale(0.9); }
-  50% { transform: translate(50px, -70px) scale(1.1); }
+  50% { transform: translate(90px, -90px) scale(1.15); }
   100% { transform: translate(0, 0) scale(0.9); }
 }
 
-/* Light theme blob setup */
+/* Custom gradients for blobs in Royal-Blue / Powder-Blue space */
 .blob-1 {
-  width: 550px;
-  height: 550px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(99, 102, 241, 0) 70%);
-  top: -10%;
-  right: -5%;
-  animation: float1 22s infinite ease-in-out;
+  width: 650px;
+  height: 650px;
+  background: radial-gradient(circle, rgba(169, 192, 224, 0.32) 0%, rgba(169, 192, 224, 0) 70%);
+  top: -15%;
+  right: -10%;
+  animation: float1 25s infinite ease-in-out;
 }
 
 .blob-2 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0) 70%);
-  bottom: -10%;
-  left: -5%;
-  animation: float2 28s infinite ease-in-out;
+  width: 750px;
+  height: 750px;
+  background: radial-gradient(circle, rgba(244, 254, 255, 0.22) 0%, rgba(244, 254, 255, 0) 75%);
+  bottom: -15%;
+  left: -10%;
+  animation: float2 30s infinite ease-in-out;
 }
 
 .blob-3 {
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0) 70%);
-  top: 35%;
-  left: 25%;
-  animation: float3 25s infinite ease-in-out;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(0, 122, 255, 0.22) 0%, rgba(0, 122, 255, 0) 70%);
+  top: 30%;
+  left: 20%;
+  animation: float3 28s infinite ease-in-out;
 }
 
-/* Dark theme blob adjustments */
 [data-theme="dark"] .blob-1 {
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.16) 0%, rgba(99, 102, 241, 0) 70%);
+  background: radial-gradient(circle, rgba(0, 122, 255, 0.15) 0%, rgba(0, 0, 0, 0) 75%);
 }
-
 [data-theme="dark"] .blob-2 {
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.14) 0%, rgba(139, 92, 246, 0) 70%);
+  background: radial-gradient(circle, rgba(175, 82, 222, 0.12) 0%, rgba(0, 0, 0, 0) 75%);
 }
-
 [data-theme="dark"] .blob-3 {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 45, 85, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
 }
 
 /* App Layout */
 .app-container {
   display: flex;
   min-height: 100vh;
-  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   background: transparent;
 }
 
@@ -176,8 +195,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Scrollbar Customization */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -186,7 +205,7 @@ h1, h2, h3, h4, h5, h6 {
 
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb);
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -197,7 +216,7 @@ h1, h2, h3, h4, h5, h6 {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
@@ -206,12 +225,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes slideInLeft {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
 }
 
 @keyframes scaleIn {
@@ -227,7 +242,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @keyframes popOut {
   0% { transform: scale(1); }
-  50% { transform: scale(1.06); }
+  50% { transform: scale(1.08); }
   100% { transform: scale(1); }
 }
 
@@ -248,7 +263,7 @@ h1, h2, h3, h4, h5, h6 {
   animation: slideInLeft var(--transition-normal) forwards;
 }
 
-/* Glassmorphism Panel helper */
+/* Apple-style Glassmorphism Panel helper */
 .glass-panel {
   background: var(--bg-card);
   backdrop-filter: var(--glass-blur);
@@ -265,7 +280,7 @@ h1, h2, h3, h4, h5, h6 {
   scrollbar-width: thin;
 }
 
-/* Interactive elements */
+/* Apple glass buttons */
 button, input, select, textarea {
   font-family: inherit;
   outline: none;
@@ -276,47 +291,51 @@ button, input, select, textarea {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: var(--radius-sm);
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
   transition: all var(--transition-fast);
 }
 
 .btn-primary {
-  background-color: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
   color: white;
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.25);
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(var(--primary-glow-color), 0.35);
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.35);
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  transform: scale(0.96);
 }
 
 .btn-secondary {
-  background-color: transparent;
+  background: rgba(255, 255, 255, 0.08);
   border-color: var(--border-color);
   color: var(--text-primary);
+  backdrop-filter: blur(10px);
 }
 
 .btn-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  border-color: var(--text-tertiary);
-  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.16);
+  border-color: var(--text-secondary);
+}
+
+.btn-secondary:active {
+  transform: scale(0.96);
 }
 
 .btn-icon {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   padding: 0;
   border-radius: 50%;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   cursor: pointer;
@@ -328,38 +347,41 @@ button, input, select, textarea {
 
 .btn-icon:hover {
   background-color: rgba(255, 255, 255, 0.15);
-  border-color: var(--text-secondary);
   color: var(--text-primary);
-  transform: scale(1.05);
+  transform: scale(1.06);
+}
+
+.btn-icon:active {
+  transform: scale(0.95);
 }
 
 .btn-icon.active {
-  background-color: rgba(var(--primary-glow-color), 0.1);
+  background-color: rgba(0, 122, 255, 0.12);
   border-color: var(--primary);
   color: var(--primary);
 }
 
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .form-group label {
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   color: var(--text-secondary);
 }
 
 .form-input {
   width: 100%;
-  padding: 10px 14px;
+  padding: 12px 16px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-color);
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background-color: rgba(255, 255, 255, 0.04);
   color: var(--text-primary);
   font-size: 0.95rem;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
@@ -367,7 +389,7 @@ button, input, select, textarea {
 
 .form-input:focus {
   border-color: var(--primary);
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
   box-shadow: 0 0 0 3px var(--border-focus);
 }
 
@@ -376,7 +398,7 @@ button, input, select, textarea {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -391,23 +413,23 @@ button, input, select, textarea {
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  padding: 24px;
+  padding: 32px;
   background: transparent;
 }
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 340px 1fr;
-  gap: 24px;
+  grid-template-columns: 360px 1fr;
+  gap: 32px;
   flex: 1;
   overflow: hidden;
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
 .dashboard-left {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -415,18 +437,18 @@ button, input, select, textarea {
 .dashboard-right {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   overflow: hidden;
   height: 100%;
 }
 
-/* Glass Sidebar styling */
+/* iOS Settings style Sidebar */
 .sidebar {
   width: 280px;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 24px 16px;
+  padding: 32px 18px;
   border: none;
   border-right: 1px solid var(--border-color);
   background: var(--bg-card);
@@ -440,24 +462,24 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
   padding-left: 8px;
 }
 
 .sidebar-logo-icon {
   background: linear-gradient(135deg, var(--primary), var(--accent-purple));
   color: white;
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-sm);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(var(--primary-glow-color), 0.35);
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
 }
 
 .sidebar-logo-text {
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: -0.5px;
   background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
@@ -466,11 +488,11 @@ button, input, select, textarea {
 }
 
 .sidebar-nav-title {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
   color: var(--text-tertiary);
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   margin-bottom: 12px;
   padding-left: 8px;
 }
@@ -480,19 +502,19 @@ button, input, select, textarea {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .sidebar-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  border-radius: 12px;
   color: var(--text-secondary);
   cursor: pointer;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 600;
+  font-size: 0.92rem;
   transition: all var(--transition-fast);
 }
 
@@ -508,21 +530,17 @@ button, input, select, textarea {
 }
 
 .sidebar-item.active {
-  background-color: rgba(var(--primary-glow-color), 0.12);
+  background-color: rgba(0, 122, 255, 0.12);
   color: var(--primary);
-  font-weight: 600;
-  border-left: 3px solid var(--primary);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding-left: 9px;
 }
 
 .sidebar-item-count {
-  font-size: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.15);
+  font-size: 0.72rem;
+  background-color: rgba(255, 255, 255, 0.14);
   color: var(--text-secondary);
   padding: 2px 8px;
-  border-radius: 12px;
-  font-weight: 600;
+  border-radius: 10px;
+  font-weight: 700;
 }
 
 .sidebar-item.active .sidebar-item-count {
@@ -549,11 +567,11 @@ button, input, select, textarea {
   align-items: center;
   gap: 10px;
   color: var(--text-secondary);
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-weight: 600;
+  font-size: 0.88rem;
   cursor: pointer;
-  padding: 8px;
-  border-radius: var(--radius-sm);
+  padding: 10px;
+  border-radius: 12px;
   transition: background-color var(--transition-fast);
 }
 
@@ -587,99 +605,138 @@ button, input, select, textarea {
   transform: scale(1.1);
 }
 
-/* Header Component */
+/* iOS Dynamic Island style Search Header */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border-color);
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--card-shadow);
+  gap: 20px;
 }
 
-.header-welcome h2 {
-  font-size: 1.75rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+.header-top-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
 }
 
-.header-welcome p {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  margin-top: 2px;
+.header-bottom-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
-.header-actions {
+.header-title-area {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
+.header-meta-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-welcome h2 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+}
+
+.header-welcome p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
 .search-bar {
   position: relative;
-  width: 240px;
+  width: 100%;
+  max-width: 220px;
 }
 
 .search-bar .form-input {
   padding-left: 36px;
+  border-radius: 30px; /* pill shape */
 }
 
 .search-bar-icon {
   position: absolute;
-  left: 12px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-tertiary);
 }
 
-/* Dashboard Statistics / Info cards */
+/* iOS Control Center Widget Layout */
 .quick-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
 
 .stat-card {
-  padding: 16px 20px;
+  aspect-ratio: 1.3 / 1;
+  min-height: 120px;
+  border-radius: var(--radius-md);
+  padding: 20px;
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .stat-icon-wrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-sm);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .stat-info {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .stat-value {
-  font-size: 1.4rem;
-  font-weight: 700;
-  font-family: 'Outfit', sans-serif;
-  line-height: 1.2;
+  font-size: 1.8rem;
+  font-weight: 800;
+  font-family: -apple-system, BlinkMacSystemFont, 'Outfit', sans-serif;
+  line-height: 1;
+  letter-spacing: -0.5px;
 }
 
 .stat-label {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
-/* Form block */
+/* Form panel */
 .todo-form-card {
-  padding: 24px;
+  padding: 28px;
+  border-radius: var(--radius-md);
 }
 
 .todo-form-title {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   font-size: 1.15rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -706,18 +763,18 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 10px;
+  padding: 8px 12px;
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   font-size: 0.85rem;
 }
 
 .subtask-builder-item span {
+  flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 220px;
 }
 
 .subtask-input-row {
@@ -730,25 +787,26 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .filter-tabs {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   background: var(--bg-card);
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-color);
   padding: 4px;
-  border-radius: var(--radius-sm);
+  border-radius: 30px; /* iOS Segmented Control pill look */
+  box-shadow: var(--card-shadow);
 }
 
 .filter-tab {
-  padding: 6px 14px;
-  border-radius: calc(var(--radius-sm) - 2px);
+  padding: 6px 16px;
+  border-radius: 20px;
   border: none;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.82rem;
+  font-weight: 700;
   cursor: pointer;
   background: transparent;
   color: var(--text-secondary);
@@ -756,8 +814,14 @@ button, input, select, textarea {
 }
 
 .filter-tab.active {
-  background-color: var(--primary);
-  color: white;
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .filter-tab.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
 }
 
 .sort-select-wrapper {
@@ -767,13 +831,14 @@ button, input, select, textarea {
 }
 
 .sort-select {
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  border-radius: 20px;
   border: 1px solid var(--border-color);
   background-color: var(--bg-card);
   backdrop-filter: var(--glass-blur);
   color: var(--text-primary);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -781,15 +846,15 @@ button, input, select, textarea {
 .todo-items-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   flex: 1;
   overflow-y: auto;
   padding-right: 4px;
 }
 
-/* Todo Item Glass Card */
+/* Todo Item Apple Card */
 .todo-card {
-  padding: 16px;
+  padding: 20px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
   background-color: var(--todo-item-bg);
@@ -798,20 +863,20 @@ button, input, select, textarea {
   box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   position: relative;
   overflow: hidden;
   transition: transform var(--transition-fast), border-color var(--transition-normal), box-shadow var(--transition-normal), background var(--transition-normal);
 }
 
 .todo-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(var(--primary-glow-color), 0.35);
-  box-shadow: 0 12px 28px 0 rgba(31, 38, 135, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px) scale(1.005);
+  border-color: rgba(0, 122, 255, 0.35);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.15);
 }
 
 .todo-card.completed {
-  opacity: 0.65;
+  opacity: 0.55;
   background-color: rgba(255, 255, 255, 0.02);
 }
 
@@ -821,25 +886,26 @@ button, input, select, textarea {
   left: 0;
   top: 0;
   bottom: 0;
-  width: 4px;
+  width: 5px;
   background-color: var(--todo-priority-color, var(--primary));
 }
 
 .todo-card-main {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 16px;
 }
 
-/* Custom Checkbox */
+/* iOS Checklist Checkbox Circle */
 .checkbox-container {
   display: block;
   position: relative;
-  padding-left: 24px;
+  padding-left: 26px;
   cursor: pointer;
   font-size: 22px;
   user-select: none;
   height: 24px;
+  margin-top: 1px;
 }
 
 .checkbox-container input {
@@ -854,9 +920,9 @@ button, input, select, textarea {
   position: absolute;
   top: 0;
   left: 0;
-  height: 22px;
-  width: 22px;
-  border-radius: 6px;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%; /* circular iOS checkbox */
   border: 2px solid var(--text-tertiary);
   background-color: transparent;
   transition: all var(--transition-fast);
@@ -869,7 +935,7 @@ button, input, select, textarea {
 .checkbox-container input:checked ~ .checkmark {
   background-color: var(--success);
   border-color: var(--success);
-  animation: popOut 0.3s ease;
+  animation: popOut 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .checkmark:after {
@@ -883,8 +949,8 @@ button, input, select, textarea {
 }
 
 .checkbox-container .checkmark:after {
-  left: 7px;
-  top: 3px;
+  left: 8px;
+  top: 4px;
   width: 5px;
   height: 10px;
   border: solid white;
@@ -898,11 +964,11 @@ button, input, select, textarea {
 }
 
 .todo-title {
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-size: 1.08rem;
+  font-weight: 700;
   color: var(--text-primary);
   line-height: 1.3;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   transition: color var(--transition-fast);
 }
 
@@ -912,10 +978,10 @@ button, input, select, textarea {
 }
 
 .todo-desc {
-  font-size: 0.85rem;
+  font-size: 0.86rem;
   color: var(--text-secondary);
-  line-height: 1.4;
-  margin-bottom: 8px;
+  line-height: 1.45;
+  margin-bottom: 10px;
 }
 
 .todo-meta {
@@ -931,28 +997,29 @@ button, input, select, textarea {
   gap: 4px;
   font-size: 0.75rem;
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .todo-meta-item.overdue {
   color: var(--danger);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .todo-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   align-self: flex-start;
 }
 
-/* Priority visual settings */
+/* Priority tags styled as minimal pills */
 .priority-tag {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
   text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .priority-tag.high {
@@ -966,18 +1033,18 @@ button, input, select, textarea {
 }
 
 .priority-tag.low {
-  background-color: rgba(99, 102, 241, 0.1);
+  background-color: rgba(0, 122, 255, 0.1);
   color: var(--primary);
 }
 
 /* Subtasks inside todo card */
 .todo-subtasks-section {
   border-top: 1px solid var(--border-color);
-  padding-top: 10px;
-  margin-left: 36px;
+  padding-top: 12px;
+  margin-left: 40px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .subtask-progress-wrapper {
@@ -986,32 +1053,33 @@ button, input, select, textarea {
   justify-content: space-between;
   font-size: 0.75rem;
   color: var(--text-secondary);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .progress-bar-bg {
   flex: 1;
-  height: 6px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  margin-left: 10px;
-  margin-right: 10px;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  margin-left: 12px;
+  margin-right: 12px;
   overflow: hidden;
 }
 
 .progress-bar-fill {
   height: 100%;
   background-color: var(--success);
-  border-radius: 3px;
+  border-radius: 10px;
   transition: width var(--transition-normal);
 }
 
 .todo-subtask-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.8rem;
+  gap: 10px;
+  font-size: 0.82rem;
   color: var(--text-primary);
+  font-weight: 500;
 }
 
 .todo-subtask-item.completed span {
@@ -1020,12 +1088,13 @@ button, input, select, textarea {
 }
 
 .todo-subtask-item .checkmark-small {
-  width: 14px;
-  height: 14px;
-  border-radius: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%; /* round checklist checkmarks */
   border: 1.5px solid var(--text-tertiary);
   position: relative;
   cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
 .todo-subtask-item.completed .checkmark-small {
@@ -1036,10 +1105,10 @@ button, input, select, textarea {
 .todo-subtask-item.completed .checkmark-small::after {
   content: '';
   position: absolute;
-  left: 4px;
-  top: 1px;
+  left: 5px;
+  top: 2px;
   width: 3px;
-  height: 6px;
+  height: 7px;
   border: solid white;
   border-width: 0 1.5px 1.5px 0;
   transform: rotate(45deg);
@@ -1057,9 +1126,10 @@ button, input, select, textarea {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 60px 20px;
+  padding: 60px 24px;
   color: var(--text-secondary);
   flex: 1;
+  border-radius: var(--radius-md);
 }
 
 .empty-state-icon {
@@ -1067,7 +1137,7 @@ button, input, select, textarea {
   height: 64px;
   color: var(--text-tertiary);
   margin-bottom: 16px;
-  background-color: var(--border-color);
+  background-color: rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1089,7 +1159,7 @@ button, input, select, textarea {
 @media (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
-    overflow-y: auto;
+    overflow-y: visible;
   }
   
   .dashboard-left {
@@ -1109,6 +1179,7 @@ button, input, select, textarea {
   .main-workspace {
     overflow-y: auto;
     height: 100vh;
+    padding: 24px;
   }
 }
 
@@ -1128,7 +1199,7 @@ button, input, select, textarea {
   
   .sidebar.mobile-open {
     transform: translateX(0);
-    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.35);
   }
   
   .sidebar-overlay {
@@ -1138,9 +1209,10 @@ button, input, select, textarea {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 99;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
   
   .sidebar-overlay.mobile-open {
@@ -1181,6 +1253,439 @@ button, input, select, textarea {
   }
   
   .search-bar {
-    flex: 1;
+    max-width: none;
   }
 }
+
+/* Mobile Screen Tuning specifically for <= 480px viewports */
+@media (max-width: 480px) {
+  .main-workspace {
+    padding: 12px 8px;
+    height: auto;
+    overflow-y: visible;
+  }
+  
+  .header {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .header-welcome h2 {
+    font-size: 1.2rem;
+  }
+  
+  .header-welcome p {
+    font-size: 0.8rem;
+  }
+  
+  .header-actions {
+    width: 100%;
+    gap: 8px;
+  }
+  
+  .search-bar {
+    max-width: none;
+    flex: 1;
+  }
+  
+  .quick-stats {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .stat-card {
+    aspect-ratio: auto;
+    min-height: 70px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 12px 16px;
+    gap: 16px;
+    border-radius: var(--radius-sm);
+  }
+  
+  .stat-icon-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .stat-info {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .stat-value {
+    font-size: 1.4rem;
+  }
+  
+  .stat-label {
+    font-size: 0.72rem;
+  }
+  
+  .todo-form-card {
+    padding: 16px;
+    border-radius: var(--radius-sm);
+  }
+  
+  .todo-card {
+    padding: 14px;
+    border-radius: var(--radius-sm);
+  }
+  
+  .todo-card-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .todo-content {
+    width: 100%;
+    min-width: 0; /* allows text truncation and wraps correctly */
+  }
+  
+  .todo-actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 4px;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 8px;
+    gap: 10px;
+    align-self: stretch;
+  }
+  
+  .todo-subtasks-section {
+    margin-left: 0;
+    padding-top: 10px;
+  }
+  
+  .todo-meta {
+    gap: 8px;
+  }
+  
+  .filter-tabs {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .filter-tab {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 0.78rem;
+    text-align: center;
+  }
+  
+  .sort-select-wrapper {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  
+  .sort-select {
+    flex: 1;
+    text-align-last: center;
+  }
+  
+  .list-filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+/* Modal Backdrop for Apple Glassmorphic Form Overlay */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(14, 47, 118, 0.45);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 24px;
+  animation: fadeIn var(--transition-fast) forwards;
+}
+
+[data-theme="dark"] .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 480px;
+  animation: scaleIn var(--transition-normal) forwards;
+}
+
+/* Mobile Apple Slide-up Bottom Sheet (Drawer Look) */
+@media (max-width: 480px) {
+  .modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal-content {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 28px 28px 0 0;
+    box-shadow: 0 -8px 32px rgba(14, 47, 118, 0.3);
+    animation: slideUp 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  .modal-content .todo-form-card {
+    border-radius: 28px 28px 0 0 !important;
+    border-bottom: none !important;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Auth Screen Styling */
+.auth-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 24px;
+}
+
+.auth-header-controls {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 10;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 36px;
+  text-align: center;
+  z-index: 5;
+}
+
+.auth-card-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-card-header p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 24px;
+}
+
+.auth-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.auth-tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all var(--transition-fast);
+}
+
+.auth-tab.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .auth-tab.active {
+  background-color: var(--royal-blue);
+  color: var(--ice-white);
+}
+
+.auth-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background-color: var(--danger-glow);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-xs);
+  color: var(--danger);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.auth-form {
+  text-align: left;
+}
+
+.auth-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.auth-input-wrapper .form-input {
+  padding-left: 44px;
+}
+
+.auth-input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.auth-terms-row {
+  margin-top: 12px;
+  margin-bottom: 20px;
+}
+
+.auth-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.auth-checkbox-label input {
+  display: none;
+}
+
+.auth-custom-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--text-tertiary);
+  transition: all var(--transition-fast);
+}
+
+.auth-custom-checkbox.checked {
+  color: var(--success);
+}
+
+.auth-submit-btn {
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.auth-guest-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin: 18px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.auth-guest-divider::before, .auth-guest-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.auth-guest-divider::before {
+  margin-right: 10px;
+}
+
+.auth-guest-divider::after {
+  margin-left: 10px;
+}
+
+.auth-guest-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.auth-guest-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* User Profile Avatar in Header */
+.header-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 30px;
+  margin-left: 6px;
+  transition: all var(--transition-fast);
+}
+
+.header-profile:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.profile-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+}
+
+.profile-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.profile-logout {
+  opacity: 0.5;
+  transition: opacity var(--transition-fast);
+}
+
+.header-profile:hover .profile-logout {
+  opacity: 1;
+}
+

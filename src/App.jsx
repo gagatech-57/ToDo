@@ -4,6 +4,7 @@ import DashboardHeader from './components/DashboardHeader';
 import StatsSection from './components/StatsSection';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
+import Auth from './components/Auth';
 import useLocalStorage from './hooks/useLocalStorage';
 
 // Predefined Workspaces/Categories
@@ -23,135 +24,239 @@ const getRelativeDate = (offsetDays) => {
 
 export default function App() {
   const [categories, setCategories] = useLocalStorage('aether_categories', DEFAULT_CATEGORIES);
-  const [todos, setTodos] = useLocalStorage('aether_todos', []);
+  const [todos, setTodos] = useState([]);
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [editingTodo, setEditingTodo] = useState(null);
   const [theme, setTheme] = useLocalStorage('aether_theme', 'dark');
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  // Initialize mock data only if todos is empty on first load
+  // Authentication State
+  const [user, setUser] = useLocalStorage('aether_user', null);
+
+  // Viewport Responsive State
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+
+  // Detect screen size changes
   useEffect(() => {
-    if (todos.length === 0) {
-      const mockTodos = [
-        {
-          id: 'mock-1',
-          title: 'Design Aether Dashboard UX',
-          description: 'Refine core components, frosted glass blur ratios, and color palette tokens.',
-          categoryId: 'cat-work',
-          priority: 'high',
-          dueDate: getRelativeDate(0), // Today
-          completed: false,
-          createdAt: Date.now() - 3600000 * 2, // 2 hrs ago
-          subtasks: [
-            { id: 'sub-1-1', text: 'Define HSL variable values', completed: true },
-            { id: 'sub-1-2', text: 'Design sidebar navigation elements', completed: false }
-          ]
-        },
-        {
-          id: 'mock-2',
-          title: 'Morning Cardio Routine',
-          description: 'Complete a 5km outdoor run at the park.',
-          categoryId: 'cat-health',
-          priority: 'medium',
-          dueDate: getRelativeDate(-1), // Yesterday (will show overdue!)
-          completed: false,
-          createdAt: Date.now() - 3600000 * 24, // 24 hrs ago
-          subtasks: []
-        },
-        {
-          id: 'mock-3',
-          title: 'Weekly grocery restock',
-          description: 'Buy vegetables, almond milk, and coffee beans.',
-          categoryId: 'cat-shopping',
-          priority: 'low',
-          dueDate: getRelativeDate(1), // Tomorrow
-          completed: false,
-          createdAt: Date.now() - 3600000 * 12, // 12 hrs ago
-          subtasks: []
-        },
-        {
-          id: 'mock-4',
-          title: 'Setup React Project Directory',
-          description: 'Scaffold application structure using Vite template.',
-          categoryId: 'cat-work',
-          priority: 'high',
-          dueDate: getRelativeDate(-2),
-          completed: true,
-          createdAt: Date.now() - 3600000 * 48,
-          subtasks: []
-        }
-      ];
-      setTodos(mockTodos);
-    }
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Fetch todos from MongoDB when user is active
+  useEffect(() => {
+    if (user) {
+      const fetchTodos = async () => {
+        try {
+          const response = await fetch('http://localhost:5050/api/todos', {
+            headers: {
+              'x-user-id': user.id
+            }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            
+            // If new user and has no tasks, seed mock data in MongoDB
+            if (data.length === 0) {
+              const mockData = [
+                {
+                  title: 'Design GAGA Flow Dashboard UX',
+                  description: 'Refine core components, frosted glass blur ratios, and color palette tokens.',
+                  categoryId: 'cat-work',
+                  priority: 'high',
+                  dueDate: getRelativeDate(0),
+                  subtasks: [
+                    { id: 'sub-1-1', text: 'Define HSL variable values', completed: true },
+                    { id: 'sub-1-2', text: 'Design sidebar navigation elements', completed: false }
+                  ]
+                },
+                {
+                  title: 'Morning Cardio Routine',
+                  description: 'Complete a 5km outdoor run at the park.',
+                  categoryId: 'cat-health',
+                  priority: 'medium',
+                  dueDate: getRelativeDate(-1), // Yesterday (overdue)
+                  subtasks: []
+                },
+                {
+                  title: 'Weekly grocery restock',
+                  description: 'Buy vegetables, almond milk, and coffee beans.',
+                  categoryId: 'cat-shopping',
+                  priority: 'low',
+                  dueDate: getRelativeDate(1), // Tomorrow
+                  subtasks: []
+                }
+              ];
+
+              const seededTodos = [];
+              for (const task of mockData) {
+                const res = await fetch('http://localhost:5050/api/todos', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'x-user-id': user.id
+                  },
+                  body: JSON.stringify(task)
+                });
+                if (res.ok) {
+                  const savedDoc = await res.json();
+                  seededTodos.push({ ...savedDoc, id: savedDoc._id });
+                }
+              }
+              setTodos(seededTodos);
+            } else {
+              // Map DB _id to id key for frontend render compatibility
+              const formatted = data.map(todo => ({ ...todo, id: todo._id }));
+              setTodos(formatted);
+            }
+          }
+        } catch (err) {
+          console.error('Error loading tasks:', err);
+        }
+      };
+      fetchTodos();
+    } else {
+      setTodos([]);
+    }
+  }, [user]);
 
   // Sync theme with DOM root node
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  // Auto-open modal form on mobile when editing is triggered
+  useEffect(() => {
+    if (editingTodo && isMobile) {
+      setIsFormOpen(true);
+    }
+  }, [editingTodo, isMobile]);
+
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
-  // Add Task
-  const handleAddTodo = (todoData) => {
-    const newTodo = {
-      ...todoData,
-      id: crypto.randomUUID(),
-      completed: false,
-      createdAt: Date.now()
-    };
-    setTodos([newTodo, ...todos]);
+  const handleLogout = () => {
+    setUser(null);
+    setTodos([]);
   };
 
-  // Update Task
-  const handleUpdateTodo = (updatedTodo) => {
-    setTodos(todos.map(t => t.id === updatedTodo.id ? updatedTodo : t));
-    setEditingTodo(null);
-  };
-
-  // Delete Task
-  const handleDeleteTodo = (id) => {
-    setTodos(todos.filter(t => t.id !== id));
-    if (editingTodo && editingTodo.id === id) {
-      setEditingTodo(null);
+  // Add Task to DB
+  const handleAddTodo = async (todoData) => {
+    try {
+      const response = await fetch('http://localhost:5050/api/todos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': user.id
+        },
+        body: JSON.stringify(todoData)
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const formatted = { ...data, id: data._id };
+        setTodos([formatted, ...todos]);
+      }
+    } catch (err) {
+      console.error('Error adding task:', err);
     }
   };
 
-  // Toggle Complete Task
-  const handleToggleComplete = (id) => {
-    setTodos(todos.map(t => {
-      if (t.id === id) {
-        return {
-          ...t,
-          completed: !t.completed,
-          // When completing task, complete all subtasks too for UX convenience
-          subtasks: t.subtasks.map(s => ({ ...s, completed: !t.completed }))
-        };
+  // Update Task in DB
+  const handleUpdateTodo = async (updatedTodo) => {
+    try {
+      const todoId = updatedTodo.id || updatedTodo._id;
+      const response = await fetch(`http://localhost:5050/api/todos/${todoId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedTodo)
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const formatted = { ...data, id: data._id };
+        setTodos(todos.map(t => (t.id === formatted.id || t._id === formatted.id) ? formatted : t));
+        setEditingTodo(null);
+        setIsFormOpen(false);
       }
-      return t;
-    }));
+    } catch (err) {
+      console.error('Error updating task:', err);
+    }
   };
 
-  // Toggle Subtask Completion
-  const handleToggleSubtask = (todoId, subtaskId) => {
-    setTodos(todos.map(t => {
-      if (t.id === todoId) {
-        const updatedSubtasks = t.subtasks.map(s => 
-          s.id === subtaskId ? { ...s, completed: !s.completed } : s
-        );
-        
-        // If all subtasks are complete, should we complete the main task?
-        // Let's keep them separate, but check if user wants to toggle them individually.
-        return {
-          ...t,
-          subtasks: updatedSubtasks
-        };
+  // Delete Task from DB
+  const handleDeleteTodo = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5050/api/todos/${id}`, {
+        method: 'DELETE'
+      });
+      if (response.ok) {
+        setTodos(todos.filter(t => t.id !== id && t._id !== id));
+        if (editingTodo && (editingTodo.id === id || editingTodo._id === id)) {
+          setEditingTodo(null);
+        }
       }
-      return t;
-    }));
+    } catch (err) {
+      console.error('Error deleting task:', err);
+    }
+  };
+
+  // Toggle Complete Task in DB
+  const handleToggleComplete = async (id) => {
+    const todo = todos.find(t => t.id === id || t._id === id);
+    if (!todo) return;
+
+    const newCompleted = !todo.completed;
+    const newSubtasks = todo.subtasks.map(s => ({ ...s, completed: newCompleted }));
+
+    try {
+      const response = await fetch(`http://localhost:5050/api/todos/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ completed: newCompleted, subtasks: newSubtasks })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const formatted = { ...data, id: data._id };
+        setTodos(todos.map(t => (t.id === id || t._id === id) ? formatted : t));
+      }
+    } catch (err) {
+      console.error('Error toggling complete:', err);
+    }
+  };
+
+  // Toggle Subtask in DB
+  const handleToggleSubtask = async (todoId, subtaskId) => {
+    const todo = todos.find(t => t.id === todoId || t._id === todoId);
+    if (!todo) return;
+
+    const newSubtasks = todo.subtasks.map(s => 
+      s.id === subtaskId ? { ...s, completed: !s.completed } : s
+    );
+
+    try {
+      const response = await fetch(`http://localhost:5050/api/todos/${todoId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ subtasks: newSubtasks })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const formatted = { ...data, id: data._id };
+        setTodos(todos.map(t => (t.id === todoId || t._id === todoId) ? formatted : t));
+      }
+    } catch (err) {
+      console.error('Error toggling subtask:', err);
+    }
   };
 
   // Create Custom Category
@@ -163,7 +268,7 @@ export default function App() {
     setCategories([...categories, newCat]);
   };
 
-  // Filter todos corresponding to current active category/folder view for the stats calculation
+  // Filter todos corresponding to current active category/folder view for stats
   const getFilteredTodosForStats = () => {
     if (activeCategory === 'all') return todos;
     
@@ -184,6 +289,11 @@ export default function App() {
   };
 
   const filteredStatsTodos = getFilteredTodosForStats();
+
+  // AUTH VIEW GATEKEEPER
+  if (!user) {
+    return <Auth onLogin={setUser} theme={theme} toggleTheme={toggleTheme} />;
+  }
 
   return (
     <div className="app-container">
@@ -215,20 +325,28 @@ export default function App() {
           theme={theme}
           toggleTheme={toggleTheme}
           setIsMobileOpen={setIsMobileOpen}
+          onOpenForm={() => setIsFormOpen(true)}
+          user={user}
+          onLogout={handleLogout}
+          isMobile={isMobile}
         />
 
         <div className="dashboard-grid custom-scroll">
           {/* Form and Stats sidebar */}
           <div className="dashboard-left">
             <StatsSection todos={filteredStatsTodos} />
-            <TodoForm
-              categories={categories}
-              activeCategory={activeCategory}
-              onAddTodo={handleAddTodo}
-              editingTodo={editingTodo}
-              onUpdateTodo={handleUpdateTodo}
-              onCancelEdit={() => setEditingTodo(null)}
-            />
+            
+            {/* Show static form on BIG SCREEN only */}
+            {!isMobile && (
+              <TodoForm
+                categories={categories}
+                activeCategory={activeCategory}
+                onAddTodo={handleAddTodo}
+                editingTodo={editingTodo}
+                onUpdateTodo={handleUpdateTodo}
+                onCancelEdit={() => setEditingTodo(null)}
+              />
+            )}
           </div>
 
           {/* Core todo items container list */}
@@ -239,11 +357,48 @@ export default function App() {
             searchQuery={searchQuery}
             onToggleComplete={handleToggleComplete}
             onDelete={handleDeleteTodo}
-            onEdit={setEditingTodo}
+            onEdit={(todo) => {
+              setEditingTodo(todo);
+              // Open modal drawer on mobile, static form handles on desktop
+              if (isMobile) {
+                setIsFormOpen(true);
+              }
+            }}
             onToggleSubtask={handleToggleSubtask}
           />
         </div>
       </main>
+
+      {/* popup modal form - ONLY rendered on MOBILE screens */}
+      {isMobile && isFormOpen && (
+        <div 
+          className="modal-backdrop" 
+          onClick={() => { 
+            setIsFormOpen(false); 
+            setEditingTodo(null); 
+          }}
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <TodoForm
+              categories={categories}
+              activeCategory={activeCategory}
+              onAddTodo={(todo) => { 
+                handleAddTodo(todo); 
+                setIsFormOpen(false); 
+              }}
+              editingTodo={editingTodo}
+              onUpdateTodo={(todo) => { 
+                handleUpdateTodo(todo); 
+                setIsFormOpen(false); 
+              }}
+              onCancelEdit={() => { 
+                setEditingTodo(null); 
+                setIsFormOpen(false); 
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
