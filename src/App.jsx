@@ -6,6 +6,7 @@ import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
 import Auth from './components/Auth';
 import useLocalStorage from './hooks/useLocalStorage';
+import { Plus } from 'lucide-react';
 
 const API_BASE = 'https://gagaflow.onrender.com/api';
 
@@ -400,6 +401,17 @@ export default function App() {
             />
           </div>
         </div>
+      )}
+
+      {/* Floating Action Button (FAB) on Mobile */}
+      {isMobile && user && (
+        <button 
+          className="mobile-fab"
+          onClick={() => setIsFormOpen(true)}
+          title="Create New Task"
+        >
+          <Plus size={24} />
+        </button>
       )}
     </div>
   );

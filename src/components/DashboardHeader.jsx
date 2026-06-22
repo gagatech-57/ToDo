@@ -120,17 +120,7 @@ export default function DashboardHeader({
           />
         </div>
 
-        {/* Create Task Button - ONLY show on mobile screen */}
-        {isMobile && (
-          <button 
-            className="btn-icon header-create-task-btn" 
-            onClick={onOpenForm}
-            title="Create New Task"
-            style={{ backgroundColor: 'var(--primary)', color: 'white', border: 'none' }}
-          >
-            <Plus size={18} />
-          </button>
-        )}
+
       </div>
     </header>
   );

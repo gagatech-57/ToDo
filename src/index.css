@@ -1212,6 +1212,7 @@ button, input, select, textarea {
     z-index: 100;
     transform: translateX(-100%);
     box-shadow: none;
+    background: var(--bg-primary) !important;
   }
   
   .sidebar.mobile-open {
@@ -1294,6 +1295,25 @@ button, input, select, textarea {
     padding: 12px 8px;
     height: auto;
     overflow-y: visible;
+  }
+  
+  .auth-card {
+    padding: 24px 16px;
+    max-width: 100%;
+    border-radius: var(--radius-sm);
+  }
+  
+  .auth-wrapper {
+    padding: 16px 10px;
+  }
+
+  .auth-checkbox-label {
+    align-items: flex-start;
+  }
+
+  .auth-terms-text {
+    line-height: 1.35;
+    font-size: 0.8rem;
   }
   
   .header {
@@ -1449,6 +1469,10 @@ button, input, select, textarea {
   animation: scaleIn var(--transition-normal) forwards;
 }
 
+.modal-content .todo-form-card {
+  background: var(--bg-primary) !important;
+}
+
 /* Mobile Apple Slide-up Bottom Sheet (Drawer Look) */
 @media (max-width: 480px) {
   .modal-backdrop {
@@ -1467,6 +1491,7 @@ button, input, select, textarea {
   .modal-content .todo-form-card {
     border-radius: 28px 28px 0 0 !important;
     border-bottom: none !important;
+    background: var(--bg-primary) !important;
   }
 }
 
@@ -1712,5 +1737,33 @@ button, input, select, textarea {
 
 .header-profile:hover .profile-logout {
   opacity: 1;
+}
+
+/* Mobile Floating Action Button (FAB) */
+.mobile-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(14, 47, 118, 0.25);
+  cursor: pointer;
+  z-index: 90;
+  transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.mobile-fab:active {
+  transform: scale(0.92);
+}
+
+[data-theme="dark"] .mobile-fab {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
