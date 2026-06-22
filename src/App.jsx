@@ -7,6 +7,8 @@ import TodoList from './components/TodoList';
 import Auth from './components/Auth';
 import useLocalStorage from './hooks/useLocalStorage';
 
+const API_BASE = 'https://gagaflow.onrender.com/api';
+
 // Predefined Workspaces/Categories
 const DEFAULT_CATEGORIES = [
   { id: 'cat-work', name: 'Work', color: '#6366f1' },
@@ -52,7 +54,7 @@ export default function App() {
     if (user) {
       const fetchTodos = async () => {
         try {
-          const response = await fetch('http://localhost:5050/api/todos', {
+          const response = await fetch(`${API_BASE}/todos`, {
             headers: {
               'x-user-id': user.id
             }
@@ -94,7 +96,7 @@ export default function App() {
 
               const seededTodos = [];
               for (const task of mockData) {
-                const res = await fetch('http://localhost:5050/api/todos', {
+                const res = await fetch(`${API_BASE}/todos`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -148,7 +150,7 @@ export default function App() {
   // Add Task to DB
   const handleAddTodo = async (todoData) => {
     try {
-      const response = await fetch('http://localhost:5050/api/todos', {
+      const response = await fetch(`${API_BASE}/todos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -170,7 +172,7 @@ export default function App() {
   const handleUpdateTodo = async (updatedTodo) => {
     try {
       const todoId = updatedTodo.id || updatedTodo._id;
-      const response = await fetch(`http://localhost:5050/api/todos/${todoId}`, {
+      const response = await fetch(`${API_BASE}/todos/${todoId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -192,7 +194,7 @@ export default function App() {
   // Delete Task from DB
   const handleDeleteTodo = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5050/api/todos/${id}`, {
+      const response = await fetch(`${API_BASE}/todos/${id}`, {
         method: 'DELETE'
       });
       if (response.ok) {
@@ -215,7 +217,7 @@ export default function App() {
     const newSubtasks = todo.subtasks.map(s => ({ ...s, completed: newCompleted }));
 
     try {
-      const response = await fetch(`http://localhost:5050/api/todos/${id}`, {
+      const response = await fetch(`${API_BASE}/todos/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -242,7 +244,7 @@ export default function App() {
     );
 
     try {
-      const response = await fetch(`http://localhost:5050/api/todos/${todoId}`, {
+      const response = await fetch(`${API_BASE}/todos/${todoId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

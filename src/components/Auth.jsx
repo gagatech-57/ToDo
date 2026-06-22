@@ -46,8 +46,8 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
     setLoading(true);
 
     const url = isLogin 
-      ? 'http://localhost:5050/api/auth/login' 
-      : 'http://localhost:5050/api/auth/register';
+      ? 'https://gagaflow.onrender.com/api/auth/login' 
+      : 'https://gagaflow.onrender.com/api/auth/register';
       
     const payload = isLogin 
       ? { email, password } 

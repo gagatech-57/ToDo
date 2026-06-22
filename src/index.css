@@ -1117,6 +1117,23 @@ button, input, select, textarea {
 /* Mobile Toggle Hamburger button */
 .mobile-nav-toggle {
   display: none;
+  background: transparent !important;
+  border: none !important;
+  color: var(--text-primary) !important;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  box-shadow: none !important;
+}
+
+.mobile-nav-toggle:hover {
+  background-color: rgba(14, 47, 118, 0.08) !important;
+  color: var(--text-primary) !important;
+  transform: scale(1.05) !important;
 }
 
 /* Empty State Styling */
