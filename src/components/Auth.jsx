@@ -218,13 +218,7 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
           <span>or</span>
         </div>
         
-        <button 
-          type="button" 
-          className="btn btn-secondary auth-guest-btn"
-          onClick={handleSkipLogin}
-        >
-          Skip & Continue as Guest (Guna)
-        </button>
+        
       </div>
     </div>
   );
