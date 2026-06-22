@@ -46,11 +46,6 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
     setLoading(true);
 
     const url = isLogin 
-      ? 'http://localhost:5500/api/auth/login' 
-      : 'http://localhost:5500/api/auth/register';
-
-    // Wait, we defined the server port as 5050 in server.js! Let's make sure we use http://localhost:5050/
-    const serverUrl = isLogin 
       ? 'http://localhost:5050/api/auth/login' 
       : 'http://localhost:5050/api/auth/register';
       
@@ -59,7 +54,7 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
       : { name, email, password };
 
     try {
-      const response = await fetch(serverUrl, {
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
