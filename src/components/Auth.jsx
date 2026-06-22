@@ -1,7 +1,36 @@
 import React, { useState } from 'react';
-import { Lock, Mail, User, ShieldAlert, CheckSquare, Square, ArrowRight, Sun, Moon } from 'lucide-react';
+import { Lock, Mail, User, ShieldAlert, CheckSquare, Square, ArrowRight, Sun, Moon, X } from 'lucide-react';
 
 export default function Auth({ onLogin, theme, toggleTheme }) {
+  const [rememberedAccounts, setRememberedAccounts] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('gaga_remembered_accounts') || '[]');
+    } catch {
+      return [];
+    }
+  });
+
+  const saveRememberedAccount = (userObj) => {
+    if (!userObj || !userObj.id || userObj.id === 'guest') return;
+    try {
+      const list = JSON.parse(localStorage.getItem('gaga_remembered_accounts') || '[]');
+      const exists = list.some(u => u.id === userObj.id || u.email === userObj.email);
+      if (!exists) {
+        const updated = [...list, { id: userObj.id, name: userObj.name, email: userObj.email }];
+        setRememberedAccounts(updated);
+        localStorage.setItem('gaga_remembered_accounts', JSON.stringify(updated));
+      }
+    } catch (err) {
+      console.error('Error saving remembered account:', err);
+    }
+  };
+
+  const handleForgetAccount = (e, userId) => {
+    e.stopPropagation();
+    const updated = rememberedAccounts.filter(u => u.id !== userId);
+    setRememberedAccounts(updated);
+    localStorage.setItem('gaga_remembered_accounts', JSON.stringify(updated));
+  };
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -69,6 +98,7 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
       }
 
       // Success
+      saveRememberedAccount(data.user);
       onLogin(data.user);
     } catch (err) {
       setError(err.message);
@@ -96,8 +126,54 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
 
       <div className="auth-card glass-panel">
         <div className="auth-card-header" style={{ marginBottom: '24px' }}>
-          <h2>GAGA Flow</h2>
+          <h2 className="auth-logo">
+            <span className="logo-gaga">GAGA</span>
+            <span className="logo-flow">Flow</span>
+          </h2>
         </div>
+
+        {/* Remembered Accounts Section */}
+        {rememberedAccounts.length > 0 && (
+          <div className="remembered-accounts-section" style={{ marginBottom: '24px' }}>
+            <p className="remembered-title" style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '10px', textAlign: 'left' }}>
+              Continue with a saved account:
+            </p>
+            <div className="remembered-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {rememberedAccounts.map(account => (
+                <div 
+                  key={account.id} 
+                  className="remembered-account-item glass-panel"
+                  onClick={() => onLogin(account)}
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    padding: '10px 14px', 
+                    borderRadius: '14px', 
+                    cursor: 'pointer',
+                    transition: 'transform var(--transition-fast), background var(--transition-fast)'
+                  }}
+                >
+                  <span className="profile-avatar" style={{ marginRight: '12px', width: '32px', height: '32px', fontSize: '0.9rem' }}>
+                    {account.name.charAt(0).toUpperCase()}
+                  </span>
+                  <div style={{ textAlign: 'left', flex: 1 }}>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>{account.name}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{account.email}</div>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-icon forget-account-btn"
+                    onClick={(e) => handleForgetAccount(e, account.id)}
+                    title="Forget account"
+                    style={{ width: '24px', height: '24px', border: 'none', background: 'transparent' }}
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Tab Selectors */}
         <div className="auth-tabs">

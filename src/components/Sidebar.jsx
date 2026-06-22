@@ -71,7 +71,10 @@ export default function Sidebar({
           <div className="sidebar-logo-icon">
             <CheckSquare size={20} />
           </div>
-          <span className="sidebar-logo-text">GAGA Flow</span>
+          <span className="sidebar-logo-text">
+            <span className="logo-gaga">GAGA</span>
+            <span className="logo-flow">Flow</span>
+          </span>
           <button 
             className="btn-icon mobile-nav-toggle" 
             style={{ marginLeft: 'auto', border: 'none' }}

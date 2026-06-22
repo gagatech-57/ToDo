@@ -1,6 +1,23 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import crypto from 'crypto';
+
+// Password hashing helpers (PBKDF2 with SHA-512)
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+  return `${salt}:${hash}`;
+}
+
+function verifyPassword(password, storedPassword) {
+  if (!storedPassword || !storedPassword.includes(':')) {
+    return password === storedPassword; // Backward compatibility for plain text passwords
+  }
+  const [salt, hash] = storedPassword.split(':');
+  const checkHash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+  return hash === checkHash;
+}
 
 const app = express();
 const PORT = 5050;
@@ -62,10 +79,12 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(400).json({ error: 'Email already registered' });
     }
 
+    const hashedPassword = hashPassword(password);
+
     const newUser = new User({
       name,
       email: email.toLowerCase(),
-      password
+      password: hashedPassword
     });
 
     await newUser.save();
@@ -93,7 +112,7 @@ app.post('/api/auth/login', async (req, res) => {
     }
 
     const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user || user.password !== password) {
+    if (!user || !verifyPassword(password, user.password)) {
       return res.status(400).json({ error: 'Invalid email or password' });
     }
 

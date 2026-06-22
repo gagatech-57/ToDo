@@ -1,53 +1,54 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Apple iOS/macOS Brand Color Palette (Royal Blue in Light Mode) */
-  --primary: var(--royal-blue);
-  --primary-hover: #123788;
-  --primary-glow-color: 14, 47, 118;
-  --success: #34c759; /* Apple Green */
-  --success-glow: rgba(52, 199, 89, 0.15);
-  --warning: #ff9500; /* Apple Orange */
+  /* Premium Emerald & Gold Brand Color Palette */
+  --primary: var(--emerald-palace);
+  --primary-hover: #07473b;
+  --primary-glow-color: 10, 94, 78;
+  --success: #10b981;
+  --success-glow: rgba(16, 185, 129, 0.15);
+  --warning: #ff9500;
   --warning-glow: rgba(255, 149, 0, 0.15);
-  --danger: #ff3b30; /* Apple Red */
+  --danger: #ff3b30;
   --danger-glow: rgba(255, 59, 48, 0.15);
-  --info: #5ac8fa; /* Apple Light Blue */
-  --accent-purple: #af52de; /* Apple Purple */
-  --accent-pink: #ff2d55; /* Apple Pink */
+  --info: #5ac8fa;
+  --accent-purple: #af52de;
+  --accent-pink: #ff2d55;
   
   /* User Custom Palette variables */
-  --royal-blue: #0E2F76;
-  --powder-blue: #A9C0E0;
-  --ice-white: #F4FEFF;
+  --emerald-palace: #0A5E4E;
+  --forest-depth: #093B33;
+  --champagne-gold: #D8C08A;
+  --ivory-silk: #F2EDE1;
 
   /* Smooth iOS Radii */
   --radius-xs: 8px;
   --radius-sm: 14px;
-  --radius-md: 24px; /* iOS standard widget corner radius */
-  --radius-lg: 32px; /* iOS panel corner radius */
+  --radius-md: 24px;
+  --radius-lg: 32px;
   
   /* System transitions */
   --transition-fast: 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
   --transition-normal: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   --transition-slow: 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 
-  /* iOS Light Glass Theme variables (Overridden with Royal Blue/Powder Blue/Ice White Palette) */
-  --bg-primary: var(--ice-white); /* Main Background is Ice White */
-  --bg-secondary: rgba(169, 192, 224, 0.18); /* Powder Blue semi-translucent */
-  --bg-card: rgba(255, 255, 255, 0.65); /* Cards, Divs, Sections */
-  --text-primary: var(--royal-blue); /* Primary Text & Headings */
-  --text-secondary: #4a5c82; /* Soft Royal Blue */
-  --text-tertiary: #7c8ea6;
-  --border-color: rgba(169, 192, 224, 0.45); /* Powder Blue Borders */
-  --border-focus: var(--royal-blue);
+  /* iOS Light Glass Theme variables (Overridden with Premium Emerald/Gold/Ivory Palette) */
+  --bg-primary: var(--ivory-silk); /* Main Background is Ivory Silk */
+  --bg-secondary: rgba(216, 192, 138, 0.15); /* Champagne Gold translucent */
+  --bg-card: rgba(255, 255, 255, 0.72); /* Glass Cards */
+  --text-primary: var(--forest-depth); /* Primary text is Forest Depth */
+  --text-secondary: #27524a; /* Soft Forest Depth green */
+  --text-tertiary: #6b847f;
+  --border-color: rgba(216, 192, 138, 0.45); /* Champagne Gold Borders */
+  --border-focus: var(--emerald-palace);
   --glass-blur: blur(35px);
-  --primary-glow: rgba(14, 47, 118, 0.06);
-  --card-shadow: 0 10px 40px -10px rgba(14, 47, 118, 0.06), 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 -1px 0 rgba(0, 0, 0, 0.02) inset;
-  --sidebar-shadow: 1px 0 0 0 rgba(169, 192, 224, 0.3);
-  --todo-item-bg: rgba(255, 255, 255, 0.75);
-  --scrollbar-track: rgba(169, 192, 224, 0.1);
-  --scrollbar-thumb: rgba(169, 192, 224, 0.45);
-  --scrollbar-thumb-hover: rgba(14, 47, 118, 0.25);
+  --primary-glow: rgba(10, 94, 78, 0.06);
+  --card-shadow: 0 10px 40px -10px rgba(9, 59, 51, 0.06), 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 -1px 0 rgba(0, 0, 0, 0.02) inset;
+  --sidebar-shadow: 1px 0 0 0 rgba(216, 192, 138, 0.3);
+  --todo-item-bg: rgba(255, 255, 255, 0.82);
+  --scrollbar-track: rgba(216, 192, 138, 0.1);
+  --scrollbar-thumb: rgba(216, 192, 138, 0.45);
+  --scrollbar-thumb-hover: rgba(10, 94, 78, 0.25);
 }
 
 [data-theme="dark"] {
@@ -617,33 +618,32 @@ button, input, select, textarea {
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   box-shadow: var(--card-shadow);
-  gap: 20px;
-}
-
-.header-top-row {
-  display: flex;
-  align-items: center;
   gap: 24px;
-  flex-shrink: 0;
 }
 
-.header-bottom-row {
+.header-left {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-shrink: 0;
 }
 
-.header-title-area {
+.header-center {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  justify-content: center;
+  flex: 1;
 }
 
-.header-meta-actions {
+.header-center .search-bar {
+  width: 100%;
+  max-width: 320px;
+}
+
+.header-right {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .header-welcome h2 {
@@ -1251,28 +1251,40 @@ button, input, select, textarea {
   }
 
   .header {
-    flex-direction: column;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: 
+      "left right"
+      "center center";
     gap: 12px;
-  }
-  
-  .header-top-row {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
     align-items: center;
+    padding: 12px 16px;
   }
   
-  .header-bottom-row {
-    width: 100%;
+  .header-left {
+    grid-area: left;
     display: flex;
     align-items: center;
     gap: 12px;
   }
   
-  .search-bar {
+  .header-center {
+    grid-area: center;
+    display: flex;
+    width: 100%;
+  }
+  
+  .header-center .search-bar {
+    width: 100%;
     max-width: none;
-    flex: 1;
+  }
+  
+  .header-right {
+    grid-area: right;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-self: end;
   }
   
   .profile-name {
@@ -1319,15 +1331,9 @@ button, input, select, textarea {
   }
   
   .header {
-    padding: 12px 16px;
+    padding: 12px 14px;
     border-radius: var(--radius-sm);
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-  
-  .header-bottom-row {
-    gap: 8px;
+    gap: 10px;
   }
   
   .header-welcome h2 {
@@ -1862,5 +1868,65 @@ button, input, select, textarea {
   .onboarding-title {
     font-size: 1.45rem;
   }
+}
+
+/* Premium Highlighted GAGA Logo Branding */
+.logo-gaga {
+  font-family: 'Outfit', -apple-system, sans-serif;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--emerald-palace), var(--champagne-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(216, 192, 138, 0.15);
+  letter-spacing: -1px;
+  margin-right: 2px;
+}
+
+[data-theme="dark"] .logo-gaga {
+  background: linear-gradient(135deg, #007aff, #af52de);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo-flow {
+  font-family: 'Outfit', -apple-system, sans-serif;
+  font-weight: 400;
+  color: var(--text-secondary);
+  letter-spacing: -0.5px;
+}
+
+[data-theme="dark"] .logo-flow {
+  color: #f2f2f7;
+}
+
+/* Remembered Account Items styles */
+.remembered-account-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 10px rgba(14, 47, 118, 0.02);
+  transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.remembered-account-item:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 15px rgba(9, 59, 51, 0.04);
+}
+
+[data-theme="light"] .remembered-account-item {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="light"] .remembered-account-item:hover {
+  background: rgba(10, 94, 78, 0.05) !important;
+}
+
+.forget-account-btn {
+  opacity: 0.4;
+  transition: opacity var(--transition-fast);
+}
+
+.remembered-account-item:hover .forget-account-btn {
+  opacity: 0.9;
 }
 
