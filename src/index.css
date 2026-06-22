@@ -1,21 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Premium Emerald & Gold Brand Color Palette */
-  --primary: var(--emerald-palace);
-  --primary-hover: #07473b;
-  --primary-glow-color: 10, 94, 78;
-  --success: #10b981;
-  --success-glow: rgba(16, 185, 129, 0.15);
-  --warning: #ff9500;
+  /* Premium Prismatic Sapphire & Platinum Glass Palette */
+  --primary: #007aff; /* Apple Blue as primary */
+  --primary-hover: #0063cc;
+  --primary-glow-color: 0, 122, 255;
+  --success: #34c759; /* Apple Green */
+  --success-glow: rgba(52, 199, 89, 0.15);
+  --warning: #ff9500; /* Apple Amber */
   --warning-glow: rgba(255, 149, 0, 0.15);
-  --danger: #ff3b30;
+  --danger: #ff3b30; /* Apple Red */
   --danger-glow: rgba(255, 59, 48, 0.15);
   --info: #5ac8fa;
   --accent-purple: #af52de;
   --accent-pink: #ff2d55;
   
-  /* User Custom Palette variables */
+  /* Legacy Palette tokens preserved for internal references if needed */
   --emerald-palace: #0A5E4E;
   --forest-depth: #093B33;
   --champagne-gold: #D8C08A;
@@ -32,23 +32,28 @@
   --transition-normal: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   --transition-slow: 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 
-  /* iOS Light Glass Theme variables (Overridden with Premium Emerald/Gold/Ivory Palette) */
-  --bg-primary: var(--ivory-silk); /* Main Background is Ivory Silk */
-  --bg-secondary: rgba(216, 192, 138, 0.15); /* Champagne Gold translucent */
+  /* iOS Light Glass Theme variables (Redesigned with Prismatic Sapphire & Platinum Glass Palette) */
+  --bg-primary: #f4f6fa; /* Beautiful cool platinum-white canvas background */
+  --bg-secondary: rgba(0, 122, 255, 0.03); /* Soft translucent blue-tinted secondary background */
   --bg-card: rgba(255, 255, 255, 0.72); /* Glass Cards */
-  --text-primary: var(--forest-depth); /* Primary text is Forest Depth */
-  --text-secondary: #27524a; /* Soft Forest Depth green */
-  --text-tertiary: #6b847f;
-  --border-color: rgba(216, 192, 138, 0.45); /* Champagne Gold Borders */
-  --border-focus: var(--emerald-palace);
-  --glass-blur: blur(35px);
-  --primary-glow: rgba(10, 94, 78, 0.06);
-  --card-shadow: 0 10px 40px -10px rgba(9, 59, 51, 0.06), 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 -1px 0 rgba(0, 0, 0, 0.02) inset;
-  --sidebar-shadow: 1px 0 0 0 rgba(216, 192, 138, 0.3);
-  --todo-item-bg: rgba(255, 255, 255, 0.82);
-  --scrollbar-track: rgba(216, 192, 138, 0.1);
-  --scrollbar-thumb: rgba(216, 192, 138, 0.45);
-  --scrollbar-thumb-hover: rgba(10, 94, 78, 0.25);
+  --text-primary: #1e293b; /* Deep slate charcoal text (highly readable) */
+  --text-secondary: #475569; /* Soft slate grey secondary text */
+  --text-tertiary: #64748b; /* Muted slate grey tertiary text */
+  --border-color: rgba(0, 122, 255, 0.08); /* Clean translucent blue-grey border */
+  --border-focus: rgba(0, 122, 255, 0.4);
+  --glass-blur: blur(30px);
+  --primary-glow: rgba(0, 122, 255, 0.04);
+  --card-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.05), 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 -1px 0 rgba(0, 0, 0, 0.01) inset;
+  --sidebar-shadow: 1px 0 0 0 rgba(0, 122, 255, 0.06);
+  --todo-item-bg: rgba(255, 255, 255, 0.85); /* Slightly less translucent todo cards */
+  --scrollbar-track: rgba(0, 122, 255, 0.03);
+  --scrollbar-thumb: rgba(0, 122, 255, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 122, 255, 0.3);
+
+  /* Sidebar styling variables (Light mode) */
+  --sidebar-item-hover: rgba(0, 0, 0, 0.04);
+  --sidebar-item-active: rgba(0, 122, 255, 0.08);
+  --sidebar-badge-bg: rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="dark"] {
@@ -72,6 +77,11 @@
   --scrollbar-track: rgba(0, 0, 0, 0.3);
   --scrollbar-thumb: rgba(255, 255, 255, 0.1);
   --scrollbar-thumb-hover: rgba(255, 255, 255, 0.2);
+
+  /* Sidebar styling variables (Dark mode) */
+  --sidebar-item-hover: rgba(255, 255, 255, 0.08);
+  --sidebar-item-active: rgba(0, 122, 255, 0.15);
+  --sidebar-badge-bg: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -526,22 +536,23 @@ button, input, select, textarea {
 }
 
 .sidebar-item:hover {
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: var(--sidebar-item-hover);
   color: var(--text-primary);
 }
 
 .sidebar-item.active {
-  background-color: rgba(0, 122, 255, 0.12);
+  background-color: var(--sidebar-item-active);
   color: var(--primary);
 }
 
 .sidebar-item-count {
   font-size: 0.72rem;
-  background-color: rgba(255, 255, 255, 0.14);
+  background-color: var(--sidebar-badge-bg);
   color: var(--text-secondary);
   padding: 2px 8px;
   border-radius: 10px;
   font-weight: 700;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 .sidebar-item.active .sidebar-item-count {
@@ -1584,8 +1595,8 @@ button, input, select, textarea {
 }
 
 [data-theme="light"] .auth-tab.active {
-  background-color: var(--royal-blue);
-  color: var(--ice-white);
+  background-color: var(--primary);
+  color: white;
 }
 
 .auth-error-banner {
@@ -1874,10 +1885,10 @@ button, input, select, textarea {
 .logo-gaga {
   font-family: 'Outfit', -apple-system, sans-serif;
   font-weight: 800;
-  background: linear-gradient(135deg, var(--emerald-palace), var(--champagne-gold));
+  background: linear-gradient(135deg, #4f46e5, #007aff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 20px rgba(216, 192, 138, 0.15);
+  text-shadow: 0 0 20px rgba(0, 122, 255, 0.1);
   letter-spacing: -1px;
   margin-right: 2px;
 }
@@ -1886,6 +1897,7 @@ button, input, select, textarea {
   background: linear-gradient(135deg, #007aff, #af52de);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(0, 122, 255, 0.2);
 }
 
 .logo-flow {
@@ -1903,14 +1915,14 @@ button, input, select, textarea {
 .remembered-account-item {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-color);
-  box-shadow: 0 2px 10px rgba(14, 47, 118, 0.02);
+  box-shadow: 0 2px 10px rgba(0, 122, 255, 0.02);
   transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .remembered-account-item:hover {
   background: rgba(255, 255, 255, 0.12) !important;
   transform: translateY(-1.5px);
-  box-shadow: 0 4px 15px rgba(9, 59, 51, 0.04);
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.05);
 }
 
 [data-theme="light"] .remembered-account-item {
@@ -1918,7 +1930,7 @@ button, input, select, textarea {
 }
 
 [data-theme="light"] .remembered-account-item:hover {
-  background: rgba(10, 94, 78, 0.05) !important;
+  background: rgba(0, 122, 255, 0.05) !important;
 }
 
 .forget-account-btn {
