@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TodoItem from './TodoItem';
-import { Inbox, CheckCircle2 } from 'lucide-react';
+import { Inbox, CheckCircle2, Briefcase, User, ShoppingBag, Heart } from 'lucide-react';
 
 export default function TodoList({
   todos,
@@ -147,6 +147,54 @@ export default function TodoList({
               onToggleSubtask={onToggleSubtask}
             />
           ))
+        ) : todos.length === 0 ? (
+          <div className="onboarding-container fade-in">
+            <h3 className="onboarding-title">Welcome to GAGA Flow!</h3>
+            <p className="onboarding-sub">Get started by exploring your pre-configured workspaces:</p>
+            <div className="onboarding-grid">
+              <div className="onboarding-card glass-panel" style={{ borderLeft: '4px solid #6366f1' }}>
+                <div className="onboarding-card-header">
+                  <div className="onboarding-icon-wrapper" style={{ backgroundColor: 'rgba(99, 102, 241, 0.1)', color: '#6366f1' }}>
+                    <Briefcase size={16} />
+                  </div>
+                  <span className="onboarding-badge" style={{ color: '#6366f1' }}>Work</span>
+                </div>
+                <p>Manage professional tasks, design deliverables, development milestones, and project deadlines.</p>
+              </div>
+              <div className="onboarding-card glass-panel" style={{ borderLeft: '4px solid #10b981' }}>
+                <div className="onboarding-card-header">
+                  <div className="onboarding-icon-wrapper" style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>
+                    <User size={16} />
+                  </div>
+                  <span className="onboarding-badge" style={{ color: '#10b981' }}>Personal</span>
+                </div>
+                <p>Track personal lifestyle goals, daily tasks, reminders, chores, and personal habits.</p>
+              </div>
+              <div className="onboarding-card glass-panel" style={{ borderLeft: '4px solid #f59e0b' }}>
+                <div className="onboarding-card-header">
+                  <div className="onboarding-icon-wrapper" style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
+                    <ShoppingBag size={16} />
+                  </div>
+                  <span className="onboarding-badge" style={{ color: '#f59e0b' }}>Shopping</span>
+                </div>
+                <p>Log store shopping items, wishlists, groceries, and gift ideas in one place.</p>
+              </div>
+              <div className="onboarding-card glass-panel" style={{ borderLeft: '4px solid #8b5cf6' }}>
+                <div className="onboarding-card-header">
+                  <div className="onboarding-icon-wrapper" style={{ backgroundColor: 'rgba(139, 92, 246, 0.1)', color: '#8b5cf6' }}>
+                    <Heart size={16} />
+                  </div>
+                  <span className="onboarding-badge" style={{ color: '#8b5cf6' }}>Health</span>
+                </div>
+                <p>Plan workouts, running activities, medical appointments, and healthy diet goals.</p>
+              </div>
+            </div>
+            <p className="onboarding-footer">
+              {window.innerWidth <= 768 
+                ? 'Tap the floating + button in the bottom right corner to add a task!'
+                : 'Click "Create New Task" on the left sidebar to add your first goal!'}
+            </p>
+          </div>
         ) : (
           <div className="empty-state glass-panel fade-in">
             <div className="empty-state-icon">
@@ -164,7 +212,7 @@ export default function TodoList({
             <p>
               {statusFilter === 'completed' 
                 ? 'Tasks you complete will show up here.' 
-                : 'Get started by creating a new task on the left!'}
+                : 'No tasks match your filter. Try adding a task!'}
             </p>
           </div>
         )}

@@ -77,14 +77,7 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
     }
   };
 
-  // Skip Login (Guest Mode - Defaults to "Guna" with initial "G" avatar)
-  const handleSkipLogin = () => {
-    onLogin({
-      id: 'guest',
-      name: 'Guna',
-      email: 'guna@local.com'
-    });
-  };
+
 
   return (
     <div className="auth-wrapper fade-in">
@@ -213,10 +206,6 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
           </button>
         </form>
 
-        {/* Guest Skip Option */}
-        <div className="auth-guest-divider">
-          <span>or</span>
-        </div>
         
         
       </div>

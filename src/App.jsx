@@ -62,60 +62,9 @@ export default function App() {
           });
           if (response.ok) {
             const data = await response.json();
-            
-            // If new user and has no tasks, seed mock data in MongoDB
-            if (data.length === 0) {
-              const mockData = [
-                {
-                  title: 'Design GAGA Flow Dashboard UX',
-                  description: 'Refine core components, frosted glass blur ratios, and color palette tokens.',
-                  categoryId: 'cat-work',
-                  priority: 'high',
-                  dueDate: getRelativeDate(0),
-                  subtasks: [
-                    { id: 'sub-1-1', text: 'Define HSL variable values', completed: true },
-                    { id: 'sub-1-2', text: 'Design sidebar navigation elements', completed: false }
-                  ]
-                },
-                {
-                  title: 'Morning Cardio Routine',
-                  description: 'Complete a 5km outdoor run at the park.',
-                  categoryId: 'cat-health',
-                  priority: 'medium',
-                  dueDate: getRelativeDate(-1), // Yesterday (overdue)
-                  subtasks: []
-                },
-                {
-                  title: 'Weekly grocery restock',
-                  description: 'Buy vegetables, almond milk, and coffee beans.',
-                  categoryId: 'cat-shopping',
-                  priority: 'low',
-                  dueDate: getRelativeDate(1), // Tomorrow
-                  subtasks: []
-                }
-              ];
-
-              const seededTodos = [];
-              for (const task of mockData) {
-                const res = await fetch(`${API_BASE}/todos`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'x-user-id': user.id
-                  },
-                  body: JSON.stringify(task)
-                });
-                if (res.ok) {
-                  const savedDoc = await res.json();
-                  seededTodos.push({ ...savedDoc, id: savedDoc._id });
-                }
-              }
-              setTodos(seededTodos);
-            } else {
-              // Map DB _id to id key for frontend render compatibility
-              const formatted = data.map(todo => ({ ...todo, id: todo._id }));
-              setTodos(formatted);
-            }
+            // Map DB _id to id key for frontend render compatibility
+            const formatted = data.map(todo => ({ ...todo, id: todo._id }));
+            setTodos(formatted);
           }
         } catch (err) {
           console.error('Error loading tasks:', err);
