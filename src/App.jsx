@@ -283,7 +283,7 @@ export default function App() {
           isMobile={isMobile}
         />
 
-        <div className="dashboard-grid custom-scroll">
+        <div className="dashboard-grid">
           {/* Form and Stats sidebar */}
           <div className="dashboard-left">
             <StatsSection todos={filteredStatsTodos} />
