@@ -67,17 +67,33 @@ export default function Sidebar({
 
       <aside className={`sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
         {/* Sidebar Header */}
-        <div className="sidebar-header">
-          <div className="sidebar-logo-icon">
-            <CheckSquare size={20} />
+        <div className="sidebar-header" style={{ position: 'relative' }}>
+          <div className="logo-wrapper">
+            <div className="infinity-bg">
+              <svg viewBox="0 0 100 50" className="infinity-svg">
+                <defs>
+                  <linearGradient id="infinity-grad-sidebar" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="var(--infinity-start)" />
+                    <stop offset="100%" stopColor="var(--infinity-end)" />
+                  </linearGradient>
+                </defs>
+                <path 
+                  d="M50,25 C32,7 14,7 14,25 C14,43 32,43 50,25 C68,7 86,7 86,25 C86,43 68,43 50,25 Z" 
+                  fill="none" 
+                  stroke="url(#infinity-grad-sidebar)" 
+                  strokeWidth="4"
+                  className="infinity-path"
+                />
+              </svg>
+            </div>
+            <span className="sidebar-logo-text">
+              <span className="logo-gaga">Gaga</span>
+              <span className="logo-todo">ToDo</span>
+            </span>
           </div>
-          <span className="sidebar-logo-text">
-            <span className="logo-gaga">GAGA</span>
-            <span className="logo-flow">Flow</span>
-          </span>
           <button 
             className="btn-icon mobile-nav-toggle" 
-            style={{ marginLeft: 'auto', border: 'none' }}
+            style={{ marginLeft: 'auto', border: 'none', zIndex: 2 }}
             onClick={() => setIsMobileOpen(false)}
           >
             <X size={20} />

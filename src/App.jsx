@@ -34,6 +34,136 @@ export default function App() {
   const [theme, setTheme] = useLocalStorage('aether_theme', 'dark');
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [toasts, setToasts] = useState([]);
+
+  // Toast notifier helper
+  // Toast notifier helper
+  const showToast = (message, type = 'info') => {
+    const id = crypto.randomUUID();
+    let title = '';
+    let note = '';
+    
+    if (typeof message === 'object' && message !== null) {
+      title = message.title || '';
+      note = message.note || '';
+    } else {
+      title = String(message);
+    }
+    
+    setToasts(prev => [...prev, { id, title, note, type }]);
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, 4000);
+  };
+
+  // Cracker boom confetti celebration (Optimized for 2 seconds duration)
+  const triggerConfetti = () => {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100vw';
+    canvas.style.height = '100vh';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '99999';
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    const handleResize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', handleResize);
+
+    const colors = ['#007aff', '#af52de', '#ff2d55', '#34c759', '#ff9500', '#ffcc00', '#5856d6'];
+    const particles = [];
+    const timeouts = [];
+    let isSpawning = true;
+    const startTime = Date.now();
+
+    // Helper to spawn a burst of particles
+    const spawnBurst = (x, y, count, angleMin, angleMax, speedMin, speedMax) => {
+      for (let i = 0; i < count; i++) {
+        const angle = angleMin + Math.random() * (angleMax - angleMin);
+        const speed = speedMin + Math.random() * (speedMax - speedMin);
+        particles.push({
+          x: x,
+          y: y,
+          angle: angle,
+          speed: speed,
+          radius: Math.random() * 3 + 2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1,
+          decay: Math.random() * 0.007 + 0.007, // Faster decay for 2s total lifecycle
+          gravity: Math.random() * 0.06 + 0.12, // Light gravity
+          wobble: Math.random() * Math.PI * 2,
+          wobbleSpeed: Math.random() * 0.04 + 0.02
+        });
+      }
+    };
+
+    // Wave 1: Immediate rich bursts from center and bottom corners
+    spawnBurst(width / 2, height * 0.5, 100, 0, Math.PI * 2, 4, 11);
+    spawnBurst(0, height, 40, -Math.PI * 0.35, -Math.PI * 0.05, 11, 17);
+    spawnBurst(width, height, 40, -Math.PI * 0.95, -Math.PI * 0.65, 11, 17);
+
+    // Wave 2: Timed burst at 350ms - Secondary corner shoots
+    timeouts.push(setTimeout(() => {
+      spawnBurst(0, height, 30, -Math.PI * 0.3, -Math.PI * 0.08, 9, 15);
+      spawnBurst(width, height, 30, -Math.PI * 0.92, -Math.PI * 0.7, 9, 15);
+    }, 350));
+
+    // Wave 3: Timed burst at 700ms - Bottom middle fountain upward
+    timeouts.push(setTimeout(() => {
+      spawnBurst(width / 2, height, 40, -Math.PI * 0.65, -Math.PI * 0.35, 8, 14);
+    }, 700));
+
+    // Wave 4: Timed burst at 1100ms - Final celebration sparkles
+    timeouts.push(setTimeout(() => {
+      spawnBurst(width * 0.3, height * 0.4, 25, 0, Math.PI * 2, 3, 7);
+      spawnBurst(width * 0.7, height * 0.4, 25, 0, Math.PI * 2, 3, 7);
+      isSpawning = false; // Finished triggering waves
+    }, 1100));
+
+    const animate = () => {
+      ctx.clearRect(0, 0, width, height);
+      let alive = isSpawning || (Date.now() - startTime < 2000); // Ensure active animation for 2 seconds
+
+      particles.forEach(p => {
+        if (p.alpha > 0) {
+          alive = true;
+          // Apply motion with wind drift wobble
+          p.x += Math.cos(p.angle) * p.speed + Math.sin(p.wobble) * 0.45;
+          p.y += Math.sin(p.angle) * p.speed + p.gravity;
+          p.speed *= 0.96; // Air resistance / friction
+          p.wobble += p.wobbleSpeed;
+          p.alpha -= p.decay;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.alpha;
+          ctx.fill();
+        }
+      });
+
+      if (alive) {
+        requestAnimationFrame(animate);
+      } else {
+        window.removeEventListener('resize', handleResize);
+        timeouts.forEach(clearTimeout);
+        if (document.body.contains(canvas)) {
+          document.body.removeChild(canvas);
+        }
+      }
+    };
+
+    animate();
+  };
+
 
   // Authentication State
   const [user, setUser] = useLocalStorage('aether_user', null);
@@ -112,9 +242,13 @@ export default function App() {
         const data = await response.json();
         const formatted = { ...data, id: data._id };
         setTodos([formatted, ...todos]);
+        showToast('Task created successfully!  🎉', 'success');
+      } else {
+        showToast('Failed to create task.', 'danger');
       }
     } catch (err) {
       console.error('Error adding task:', err);
+      showToast('Connection error. Failed to add task.', 'danger');
     }
   };
 
@@ -135,9 +269,13 @@ export default function App() {
         setTodos(todos.map(t => (t.id === formatted.id || t._id === formatted.id) ? formatted : t));
         setEditingTodo(null);
         setIsFormOpen(false);
+        showToast('Task updated successfully! 📝', 'success');
+      } else {
+        showToast('Failed to update task.', 'danger');
       }
     } catch (err) {
       console.error('Error updating task:', err);
+      showToast('Connection error. Failed to update task.', 'danger');
     }
   };
 
@@ -152,19 +290,42 @@ export default function App() {
         if (editingTodo && (editingTodo.id === id || editingTodo._id === id)) {
           setEditingTodo(null);
         }
+        showToast('Task deleted successfully.', 'info');
+      } else {
+        showToast('Failed to delete task.', 'danger');
       }
     } catch (err) {
       console.error('Error deleting task:', err);
+      showToast('Connection error. Failed to delete task.', 'danger');
     }
   };
 
-  // Toggle Complete Task in DB
+  // Toggle Complete Task in DB (Optimistic UI Update for instant feedback)
   const handleToggleComplete = async (id) => {
     const todo = todos.find(t => t.id === id || t._id === id);
     if (!todo) return;
 
+    const originalTodo = { ...todo };
     const newCompleted = !todo.completed;
-    const newSubtasks = todo.subtasks.map(s => ({ ...s, completed: newCompleted }));
+    const newSubtasks = todo.subtasks ? todo.subtasks.map(s => ({ ...s, completed: newCompleted })) : [];
+
+    // Optimistically update local state immediately (0ms lag)
+    const optimisticTodo = { ...todo, completed: newCompleted, subtasks: newSubtasks };
+    setTodos(prevTodos => prevTodos.map(t => (t.id === id || t._id === id) ? optimisticTodo : t));
+
+    // Show toast and confetti immediately
+    if (newCompleted) {
+      triggerConfetti();
+      const quotes = [
+        "Be consistent, do well.",
+        "Task completed! Do well.",
+        "Task completed! Never give up."
+      ];
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      showToast({ title: 'Task completed! 🎉', note: randomQuote }, 'success');
+    } else {
+      showToast({ title: 'Task marked as pending.', note: 'Keep doing! Never give up.' }, 'info');
+    }
 
     try {
       const response = await fetch(`${API_BASE}/todos/${id}`, {
@@ -174,13 +335,21 @@ export default function App() {
         },
         body: JSON.stringify({ completed: newCompleted, subtasks: newSubtasks })
       });
-      if (response.ok) {
+      if (!response.ok) {
+        // Revert optimistic update on failure
+        setTodos(prevTodos => prevTodos.map(t => (t.id === id || t._id === id) ? originalTodo : t));
+        showToast('Failed to toggle task status.', 'danger');
+      } else {
         const data = await response.json();
         const formatted = { ...data, id: data._id };
-        setTodos(todos.map(t => (t.id === id || t._id === id) ? formatted : t));
+        // Sync with actual DB response
+        setTodos(prevTodos => prevTodos.map(t => (t.id === id || t._id === id) ? formatted : t));
       }
     } catch (err) {
       console.error('Error toggling complete:', err);
+      // Revert optimistic update on error
+      setTodos(prevTodos => prevTodos.map(t => (t.id === id || t._id === id) ? originalTodo : t));
+      showToast('Connection error. Reverted status.', 'danger');
     }
   };
 
@@ -244,7 +413,20 @@ export default function App() {
 
   // AUTH VIEW GATEKEEPER
   if (!user) {
-    return <Auth onLogin={setUser} theme={theme} toggleTheme={toggleTheme} />;
+    return (
+      <Auth 
+        onLogin={(userObj, isRegister) => {
+          setUser(userObj);
+          if (isRegister) {
+            showToast('Account created successfully! Welcome 🎉', 'success');
+          } else {
+            showToast('Logged in successfully! Welcome back 👋', 'success');
+          }
+        }} 
+        theme={theme} 
+        toggleTheme={toggleTheme} 
+      />
+    );
   }
 
   return (
@@ -362,6 +544,24 @@ export default function App() {
           <Plus size={24} />
         </button>
       )}
+
+      {/* Toast Notification Chunky Bar System */}
+      <div className="toast-container">
+        {toasts.map(toast => (
+          <div key={toast.id} className={`toast-card toast-${toast.type} scale-in`}>
+            <div className="toast-content-wrapper">
+              <span className="toast-title">{toast.title}</span>
+              {toast.note && <span className="toast-note">{toast.note}</span>}
+            </div>
+            <button 
+              className="toast-close" 
+              onClick={() => setToasts(prev => prev.filter(t => t.id !== toast.id))}
+            >
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

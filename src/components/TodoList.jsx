@@ -57,16 +57,19 @@ export default function TodoList({
     );
   };
 
-  // 4. Sorting Logic
+  // 4. Sorting Logic (Restores keeping completed tasks in place)
   const sortTasks = (list) => {
-    const listCopy = [...list];
-    
+    const copy = [...list];
     if (sortBy === 'newest') {
-      return listCopy.sort((a, b) => b.createdAt - a.createdAt);
+      return copy.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      });
     }
     
     if (sortBy === 'dueDate') {
-      return listCopy.sort((a, b) => {
+      return copy.sort((a, b) => {
         if (!a.dueDate) return 1;
         if (!b.dueDate) return -1;
         return new Date(a.dueDate) - new Date(b.dueDate);
@@ -75,12 +78,12 @@ export default function TodoList({
     
     if (sortBy === 'priority') {
       const priorityWeight = { high: 3, medium: 2, low: 1 };
-      return listCopy.sort((a, b) => {
+      return copy.sort((a, b) => {
         return priorityWeight[b.priority] - priorityWeight[a.priority];
       });
     }
     
-    return listCopy;
+    return copy;
   };
 
   // Run the pipelined filters
@@ -149,7 +152,7 @@ export default function TodoList({
           ))
         ) : todos.length === 0 ? (
           <div className="onboarding-container fade-in">
-            <h3 className="onboarding-title">Welcome to GAGA Flow!</h3>
+            <h3 className="onboarding-title">Welcome to Gaga ToDo!</h3>
             <p className="onboarding-sub">Get started by exploring your pre-configured workspaces:</p>
             <div className="onboarding-grid">
               <div className="onboarding-card glass-panel" style={{ borderLeft: '4px solid #6366f1' }}>
