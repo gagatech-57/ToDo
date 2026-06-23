@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
 @font-face {
   font-family: 'Nevera';
@@ -1938,95 +1938,30 @@ select option {
   }
 }
 
-/* Premium Highlighted GAGA Logo Branding & Infinity Background Animation */
+/* Premium Highlighted Gaga Logo Branding */
 :root {
-  --infinity-start: #001f3f; /* Navy */
-  --infinity-end: #007aff;   /* Royal Blue */
+  --logo-start: #001f3f; /* Navy */
+  --logo-end: #007aff;   /* Royal Blue */
 }
 
 [data-theme="dark"] {
-  --infinity-start: #0044cc; /* Rich Dark Blue */
-  --infinity-end: #00d2ff;   /* Neon Light Blue */
-}
-
-.logo-wrapper {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 20px;
-}
-
-.infinity-bg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 156px; /* Expanded width to fully cover "GAGA Flow" text backdrop */
-  height: 78px; /* 2:1 aspect ratio corresponding to 100x50 viewBox */
-  pointer-events: none;
-  z-index: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
-}
-
-.infinity-svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  /* Removed rotating animation to keep center point fixed */
-  opacity: 0.45; /* Darker loop visibility in light mode */
-  transition: opacity var(--transition-normal);
-}
-
-[data-theme="dark"] .infinity-svg {
-  opacity: 0.6; /* Higher contrast in dark mode */
-}
-
-.infinity-path {
-  stroke-dasharray: 240;
-  stroke-dashoffset: 240;
-  animation: drawStroke 3s ease-in-out infinite;
-}
-
-@keyframes rotateInfinity {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes drawStroke {
-  0% {
-    stroke-dashoffset: 240;
-  }
-  50% {
-    stroke-dashoffset: 0;
-  }
-  100% {
-    stroke-dashoffset: -240;
-  }
+  --logo-start: #0044cc; /* Rich Dark Blue */
+  --logo-end: #00d2ff;   /* Neon Light Blue */
 }
 
 .logo-gaga {
-  font-family: 'Nevera', 'Outfit', -apple-system, sans-serif;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--infinity-start), var(--infinity-end)); /* Blue and Navy mixed gradient */
+  font-family: 'Outfit', -apple-system, sans-serif;
+  font-weight: 800; /* Extra-bold modern style */
+  background: linear-gradient(135deg, var(--logo-start), var(--logo-end)); /* Blue and Navy mixed gradient */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 20px rgba(0, 122, 255, 0.15);
-  letter-spacing: 1.5px; /* Open spacing for Nevera font shapes */
-  margin-right: 3px;
-  z-index: 1;
-  position: relative;
+  letter-spacing: -1px; /* Tight spacing for premium modern look */
+  margin-right: 2px;
 }
 
 [data-theme="dark"] .logo-gaga {
-  background: linear-gradient(135deg, var(--infinity-start), var(--infinity-end)); /* Dark mode navy/blue mixed gradient */
+  background: linear-gradient(135deg, var(--logo-start), var(--logo-end)); /* Dark mode navy/blue mixed gradient */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 25px rgba(0, 210, 255, 0.35);
@@ -2037,8 +1972,6 @@ select option {
   font-weight: 600; /* semi-bold for clean readability next to Gaga */
   color: var(--text-secondary);
   letter-spacing: -0.5px;
-  z-index: 1;
-  position: relative;
 }
 
 [data-theme="dark"] .logo-todo {

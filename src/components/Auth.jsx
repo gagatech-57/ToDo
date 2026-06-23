@@ -125,30 +125,11 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
       </div>
 
       <div className="auth-card glass-panel">
-        <div className="auth-card-header" style={{ marginBottom: '24px', position: 'relative', display: 'flex', justifyContent: 'center' }}>
-          <div className="logo-wrapper">
-            <div className="infinity-bg">
-              <svg viewBox="0 0 100 50" className="infinity-svg">
-                <defs>
-                  <linearGradient id="infinity-grad-auth" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="var(--infinity-start)" />
-                    <stop offset="100%" stopColor="var(--infinity-end)" />
-                  </linearGradient>
-                </defs>
-                <path 
-                  d="M50,25 C32,7 14,7 14,25 C14,43 32,43 50,25 C68,7 86,7 86,25 C86,43 68,43 50,25 Z" 
-                  fill="none" 
-                  stroke="url(#infinity-grad-auth)" 
-                  strokeWidth="4"
-                  className="infinity-path"
-                />
-              </svg>
-            </div>
-            <h2 className="auth-logo" style={{ margin: 0 }}>
-              <span className="logo-gaga">Gaga</span>
-              <span className="logo-todo">ToDo</span>
-            </h2>
-          </div>
+        <div className="auth-card-header" style={{ marginBottom: '24px' }}>
+          <h2 className="auth-logo">
+            <span className="logo-gaga">Gaga</span>
+            <span className="logo-todo">ToDo</span>
+          </h2>
         </div>
 
         {/* Remembered Accounts Section */}
