@@ -4,11 +4,14 @@ import DashboardHeader from './components/DashboardHeader';
 import StatsSection from './components/StatsSection';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
+import DoList from './components/DoList';
 import Auth from './components/Auth';
 import useLocalStorage from './hooks/useLocalStorage';
-import { Plus } from 'lucide-react';
+import { Plus, Activity } from 'lucide-react';
 
-const API_BASE = 'https://gagaflow.onrender.com/api';
+const API_BASE = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5050/api' 
+  : 'https://gagaflow.onrender.com/api';
 
 // Predefined Workspaces/Categories
 const DEFAULT_CATEGORIES = [
@@ -35,6 +38,14 @@ export default function App() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
+  const [dos, setDos] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  });
 
   // Toast notifier helper
   // Toast notifier helper
@@ -206,6 +217,31 @@ export default function App() {
     }
   }, [user]);
 
+  // Fetch Do Items from MongoDB when user is active or selectedDate changes
+  useEffect(() => {
+    if (user) {
+      const fetchDos = async () => {
+        try {
+          const response = await fetch(`${API_BASE}/dos?date=${selectedDate}`, {
+            headers: {
+              'x-user-id': user.id
+            }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            const formatted = data.map(doItem => ({ ...doItem, id: doItem._id }));
+            setDos(formatted);
+          }
+        } catch (err) {
+          console.error('Error loading do logs:', err);
+        }
+      };
+      fetchDos();
+    } else {
+      setDos([]);
+    }
+  }, [user, selectedDate]);
+
   // Sync theme with DOM root node
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -297,6 +333,50 @@ export default function App() {
     } catch (err) {
       console.error('Error deleting task:', err);
       showToast('Connection error. Failed to delete task.', 'danger');
+    }
+  };
+
+  // Add Daily Log (Do Item) to DB
+  const handleAddDo = async (time, text) => {
+    try {
+      const response = await fetch(`${API_BASE}/dos`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': user.id
+        },
+        body: JSON.stringify({ time, text, dateStr: selectedDate })
+      });
+
+      if (response.ok) {
+        const newDo = await response.json();
+        setDos(prev => [{ ...newDo, id: newDo._id }, ...prev]);
+        showToast('Daily log added successfully!', 'success');
+      } else {
+        showToast('Failed to add daily log.', 'danger');
+      }
+    } catch (err) {
+      console.error('Error adding daily log:', err);
+      showToast('Connection error. Failed to add daily log.', 'danger');
+    }
+  };
+
+  // Delete Daily Log (Do Item) from DB
+  const handleDeleteDo = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE}/dos/${id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        setDos(prev => prev.filter(item => item.id !== id && item._id !== id));
+        showToast('Daily log deleted successfully.', 'info');
+      } else {
+        showToast('Failed to delete daily log.', 'danger');
+      }
+    } catch (err) {
+      console.error('Error deleting daily log:', err);
+      showToast('Connection error. Failed to delete daily log.', 'danger');
     }
   };
 
@@ -411,6 +491,11 @@ export default function App() {
 
   const filteredStatsTodos = getFilteredTodosForStats();
 
+  const filteredDos = dos.filter(item => 
+    item.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.time.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   // AUTH VIEW GATEKEEPER
   if (!user) {
     return (
@@ -447,6 +532,7 @@ export default function App() {
         onAddCategory={handleAddCategory}
         isMobileOpen={isMobileOpen}
         setIsMobileOpen={setIsMobileOpen}
+        dos={dos}
       />
 
       {/* Main Task View Dashboard */}
@@ -467,39 +553,58 @@ export default function App() {
 
         <div className="dashboard-grid">
           {/* Form and Stats sidebar */}
-          <div className="dashboard-left">
-            <StatsSection todos={filteredStatsTodos} />
-            
-            {/* Show static form on BIG SCREEN only */}
-            {!isMobile && (
-              <TodoForm
-                categories={categories}
-                activeCategory={activeCategory}
-                onAddTodo={handleAddTodo}
-                editingTodo={editingTodo}
-                onUpdateTodo={handleUpdateTodo}
-                onCancelEdit={() => setEditingTodo(null)}
-              />
-            )}
-          </div>
+          {(!isMobile || activeCategory !== 'dos') && (
+            <div className="dashboard-left">
+              {activeCategory === 'dos' ? (
+                <DoFormDesktop onAddDo={handleAddDo} />
+              ) : (
+                <>
+                  <StatsSection todos={filteredStatsTodos} />
+                  
+                  {/* Show static form on BIG SCREEN only */}
+                  {!isMobile && (
+                    <TodoForm
+                      categories={categories}
+                      activeCategory={activeCategory}
+                      onAddTodo={handleAddTodo}
+                      editingTodo={editingTodo}
+                      onUpdateTodo={handleUpdateTodo}
+                      onCancelEdit={() => setEditingTodo(null)}
+                    />
+                  )}
+                </>
+              )}
+            </div>
+          )}
 
-          {/* Core todo items container list */}
-          <TodoList
-            todos={todos}
-            categories={categories}
-            activeCategory={activeCategory}
-            searchQuery={searchQuery}
-            onToggleComplete={handleToggleComplete}
-            onDelete={handleDeleteTodo}
-            onEdit={(todo) => {
-              setEditingTodo(todo);
-              // Open modal drawer on mobile, static form handles on desktop
-              if (isMobile) {
-                setIsFormOpen(true);
-              }
-            }}
-            onToggleSubtask={handleToggleSubtask}
-          />
+          {/* Core todo items container list / Do's Timeline */}
+          {activeCategory === 'dos' ? (
+            <DoList
+              dos={filteredDos}
+              onAddDo={handleAddDo}
+              onDeleteDo={handleDeleteDo}
+              isMobile={isMobile}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            />
+          ) : (
+            <TodoList
+              todos={todos}
+              categories={categories}
+              activeCategory={activeCategory}
+              searchQuery={searchQuery}
+              onToggleComplete={handleToggleComplete}
+              onDelete={handleDeleteTodo}
+              onEdit={(todo) => {
+                setEditingTodo(todo);
+                // Open modal drawer on mobile, static form handles on desktop
+                if (isMobile) {
+                  setIsFormOpen(true);
+                }
+              }}
+              onToggleSubtask={handleToggleSubtask}
+            />
+          )}
         </div>
       </main>
 
@@ -535,7 +640,7 @@ export default function App() {
       )}
 
       {/* Floating Action Button (FAB) on Mobile */}
-      {isMobile && user && (
+      {isMobile && user && activeCategory !== 'dos' && (
         <button 
           className="mobile-fab"
           onClick={() => setIsFormOpen(true)}
@@ -562,6 +667,72 @@ export default function App() {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+// ---------------- DESKTOP LOG DAILY FORM ----------------
+function DoFormDesktop({ onAddDo }) {
+  const [time, setTime] = useState('');
+  const [text, setText] = useState('');
+
+  const getCurrentTime = () => {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+  useEffect(() => {
+    setTime(getCurrentTime());
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!time.trim() || !text.trim()) return;
+    onAddDo(time.trim(), text.trim());
+    setText('');
+    setTime(getCurrentTime());
+  };
+
+  return (
+    <div className="glass-panel todo-form-card fade-in">
+      <h3 className="todo-form-title" style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <Activity size={20} style={{ color: 'var(--primary)' }} />
+        <span>Log Daily Activity</span>
+      </h3>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group" style={{ marginBottom: '16px' }}>
+          <label htmlFor="do-time" style={{ display: 'block', marginBottom: '8px', fontSize: '0.82rem', fontWeight: 600 }}>Time</label>
+          <input
+            id="do-time"
+            type="text"
+            className="form-input"
+            placeholder="e.g. 6.00 or 06:00 AM"
+            value={time}
+            readOnly
+            required
+            style={{ width: '100%', cursor: 'default' }}
+          />
+        </div>
+        <div className="form-group" style={{ marginBottom: '20px' }}>
+          <label htmlFor="do-text" style={{ display: 'block', marginBottom: '8px', fontSize: '0.82rem', fontWeight: 600 }}>Activity description</label>
+          <input
+            id="do-text"
+            type="text"
+            className="form-input"
+            placeholder="What did you do?"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            required
+            style={{ width: '100%' }}
+          />
+        </div>
+        <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '10px 16px', justifyContent: 'center' }}>
+          <Plus size={16} />
+          <span>Add Log</span>
+        </button>
+      </form>
     </div>
   );
 }

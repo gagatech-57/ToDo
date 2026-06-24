@@ -17,7 +17,8 @@ export default function Sidebar({
   todos,
   onAddCategory,
   isMobileOpen,
-  setIsMobileOpen
+  setIsMobileOpen,
+  dos = []
 }) {
   const [isAdding, setIsAdding] = useState(false);
   const [newCatName, setNewCatName] = useState('');
@@ -138,6 +139,20 @@ export default function Sidebar({
               <span>Important</span>
             </div>
             <span className="sidebar-item-count">{getSystemListCount('important')}</span>
+          </li>
+
+          <li 
+            className={`sidebar-item ${activeCategory === 'dos' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveCategory('dos');
+              setIsMobileOpen(false);
+            }}
+          >
+            <div className="sidebar-item-left">
+              <CheckSquare size={18} style={{ color: 'var(--primary)' }} />
+              <span>Do's</span>
+            </div>
+            <span className="sidebar-item-count">{dos.length}</span>
           </li>
         </ul>
 

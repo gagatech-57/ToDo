@@ -27,10 +27,6 @@ const MONGO_URI = 'mongodb+srv://gunaknn_db_user:gunasekarviji@cluster0.ioiwshu.
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('MongoDB Connected to swiftmarket database'))
-  .catch(err => console.error('MongoDB connection error:', err));
 
 // ---------------- USER SCHEMA & MODEL ----------------
 const userSchema = new mongoose.Schema({
@@ -61,6 +57,47 @@ const todoSchema = new mongoose.Schema({
 });
 
 const Todo = mongoose.model('Todo', todoSchema);
+
+// ---------------- DO ITEM SCHEMA & MODEL ----------------
+const doItemSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  time: { type: String, required: true },
+  text: { type: String, required: true },
+  dateStr: { type: String, required: true },
+  createdAt: { type: Number, default: () => Date.now() }
+});
+
+const DoItem = mongoose.model('DoItem', doItemSchema);
+
+// MongoDB connection & Startup migration
+mongoose.connect(MONGO_URI)
+  .then(async () => {
+    console.log('MongoDB Connected to swiftmarket database');
+    try {
+      const result = await DoItem.collection.updateMany(
+        { dateStr: { $exists: false } },
+        [
+          {
+            $set: {
+              dateStr: {
+                $dateToString: {
+                  format: "%Y-%m-%d",
+                  date: { $toDate: "$createdAt" },
+                  timezone: "Asia/Kolkata"
+                }
+              }
+            }
+          }
+        ]
+      );
+      if (result.modifiedCount > 0) {
+        console.log(`Successfully migrated ${result.modifiedCount} legacy do items without dateStr`);
+      }
+    } catch (migrateErr) {
+      console.error('DoItem legacy migration error:', migrateErr);
+    }
+  })
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // ---------------- ROUTES ----------------
 
@@ -210,6 +247,83 @@ app.delete('/api/todos/:id', async (req, res) => {
   } catch (err) {
     console.error('Delete todo error:', err);
     res.status(500).json({ error: 'Server error deleting todo' });
+  }
+});
+
+// 7. Get Do Items for Logged-in User
+app.get('/api/dos', async (req, res) => {
+  try {
+    const userId = req.headers['x-user-id'];
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized: User ID missing' });
+    }
+
+    const { date } = req.query;
+    const filter = { userId };
+    if (date) {
+      filter.dateStr = date;
+    }
+
+    const dos = await DoItem.find(filter).sort({ createdAt: -1 }); // Sort newest first (reverse chronological order)
+    res.json(dos);
+  } catch (err) {
+    console.error('Get dos error:', err);
+    res.status(500).json({ error: 'Server error fetching dos' });
+  }
+});
+
+// 8. Create Do Item
+app.post('/api/dos', async (req, res) => {
+  try {
+    const userId = req.headers['x-user-id'];
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized: User ID missing' });
+    }
+
+    const { time, text, dateStr } = req.body;
+    if (!time || !text) {
+      return res.status(400).json({ error: 'Time and text are required' });
+    }
+
+    const getLocalDateStr = () => {
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    const fallbackDateStr = dateStr || getLocalDateStr();
+
+    const newDo = new DoItem({
+      userId,
+      time,
+      text,
+      dateStr: fallbackDateStr
+    });
+
+    await newDo.save();
+    res.status(201).json(newDo);
+  } catch (err) {
+    console.error('Create do error:', err);
+    res.status(500).json({ error: 'Server error creating do log' });
+  }
+});
+
+// 9. Delete Do Item
+app.delete('/api/dos/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedDo = await DoItem.findByIdAndDelete(id);
+
+    if (!deletedDo) {
+      return res.status(444).json({ error: 'Do log not found' });
+    }
+
+    res.json({ message: 'Do log deleted successfully' });
+  } catch (err) {
+    console.error('Delete do error:', err);
+    res.status(500).json({ error: 'Server error deleting do log' });
   }
 });
 

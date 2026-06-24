@@ -67,6 +67,9 @@
   /* Select dropdown option solid colors */
   --select-option-bg: #ffffff;
   --select-option-text: #1e293b;
+
+  /* Solid toast notification background */
+  --toast-bg: #ffffff;
 }
 
 [data-theme="dark"] {
@@ -99,6 +102,9 @@
   /* Select dropdown option solid colors */
   --select-option-bg: #2c2c2e;
   --select-option-text: #f2f2f7;
+
+  /* Solid toast notification background */
+  --toast-bg: #1c1c1e;
 }
 
 * {
@@ -457,6 +463,7 @@ select option {
   flex: 1;
   overflow: hidden;
   margin-top: 24px;
+  min-height: 0; /* Prevents container from overflowing flex height limits */
 }
 
 .dashboard-left {
@@ -465,6 +472,7 @@ select option {
   gap: 24px;
   overflow-y: auto;
   padding-right: 4px;
+  min-height: 0; /* Prevents overflow from expanding the grid item height */
 }
 
 .dashboard-right {
@@ -473,6 +481,7 @@ select option {
   gap: 24px;
   overflow: hidden;
   height: 100%;
+  min-height: 0; /* Prevents overflow from expanding the grid item height */
 }
 
 /* iOS Settings style Sidebar */
@@ -899,6 +908,7 @@ select option {
   gap: 14px;
   position: relative;
   overflow: hidden;
+  flex-shrink: 0; /* Prevents cards from squishing and clipping content inside flex containers */
   transition: transform var(--transition-fast), border-color var(--transition-normal), box-shadow var(--transition-normal), background var(--transition-normal);
 }
 
@@ -2025,9 +2035,7 @@ select option {
 
 .toast-card {
   pointer-events: auto;
-  background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background: var(--toast-bg); /* Opaque background to prevent text from overlapping */
   border: 1px solid var(--border-color);
   padding: 14px 20px;
   border-radius: var(--radius-sm);
@@ -2095,9 +2103,10 @@ select option {
 /* Mobile responsive toast styles */
 @media (max-width: 768px) {
   .toast-container {
-    top: 115px;
-    right: 24px;
-    left: 24px;
+    bottom: 95px; /* Float above browser bottom bar and FAB to avoid covering search/stats at the top */
+    top: auto;
+    right: 16px;
+    left: 16px;
     width: auto;
     max-width: none;
   }
@@ -2107,4 +2116,295 @@ select option {
     font-size: 0.85rem;
   }
 }
+
+/* Daily Do's Timeline styling */
+.do-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.do-timeline-wrapper {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding-right: 4px;
+  padding-left: 4px;
+}
+
+.do-timeline {
+  position: relative;
+  border-left: 2px solid var(--border-color);
+  margin-left: 12px;
+  padding-left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.do-timeline-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.do-timeline-node {
+  position: absolute;
+  left: -33px; /* Sits exactly on the timeline line: border-left (12px) + padding-left (24px) offset */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-color: var(--bg-primary);
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.do-node-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--primary);
+  border-radius: 50%;
+}
+
+.do-log-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  background-color: var(--todo-item-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--card-shadow);
+  transition: transform var(--transition-fast), border-color var(--transition-normal);
+}
+
+.do-log-card:hover {
+  transform: translateY(-1.5px);
+  border-color: rgba(0, 122, 255, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.do-log-time-badge {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, var(--logo-start), var(--logo-end));
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+}
+
+.do-log-text {
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.delete-do-btn {
+  opacity: 0.3;
+  transition: opacity var(--transition-fast);
+}
+
+.do-log-card:hover .delete-do-btn {
+  opacity: 1;
+}
+
+/* Light Mode Card adjustments */
+[data-theme="light"] .do-log-card {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+/* Date Selector strip styles */
+.do-date-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--todo-item-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  box-shadow: var(--card-shadow);
+}
+
+.do-month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.do-month-label-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.do-month-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.do-month-nav-btn:hover:not(:disabled) {
+  background: rgba(0, 122, 255, 0.15);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.do-month-nav-btn:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.do-calendar-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.do-calendar-btn:hover {
+  background: rgba(0, 122, 255, 0.15);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.do-calendar-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Chrome/Safari specific tricks to make sure date input overlay takes full space */
+.do-calendar-input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.do-week-strip-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.do-days-strip {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.do-day-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  height: 58px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.do-day-item:hover:not(.disabled):not(.active) {
+  border-color: var(--primary);
+  color: var(--text-primary);
+  background: rgba(0, 122, 255, 0.05);
+}
+
+.do-day-item.active {
+  background: linear-gradient(135deg, var(--logo-start), var(--logo-end));
+  color: white;
+  border-color: transparent;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
+}
+
+.do-day-item.disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.01);
+  border-color: var(--border-color);
+}
+
+.do-day-weekday {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+  opacity: 0.7;
+}
+
+.do-day-number {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.do-day-item.active .do-day-weekday {
+  opacity: 0.9;
+}
+
+[data-theme="light"] .do-day-item {
+  background: rgba(0, 0, 0, 0.02);
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .do-day-item.disabled {
+  background: rgba(0, 0, 0, 0.01);
+  opacity: 0.25;
+}
+
+
 

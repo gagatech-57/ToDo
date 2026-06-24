@@ -23,6 +23,7 @@ export default function DashboardHeader({
     if (activeCategory === 'today') return "Today's Agenda";
     if (activeCategory === 'scheduled') return 'Scheduled Focus';
     if (activeCategory === 'important') return 'Important Priority';
+    if (activeCategory === 'dos') return "Daily Do's";
     
     const cat = categories.find(c => c.id === activeCategory);
     return cat ? `${cat.name} Workspace` : 'Workspace';
@@ -33,6 +34,7 @@ export default function DashboardHeader({
     if (activeCategory === 'today') return 'var(--success)';
     if (activeCategory === 'scheduled') return 'var(--info)';
     if (activeCategory === 'important') return 'var(--danger)';
+    if (activeCategory === 'dos') return 'var(--accent-purple)';
 
     const cat = categories.find(c => c.id === activeCategory);
     return cat ? cat.color : 'var(--primary)';
@@ -43,6 +45,7 @@ export default function DashboardHeader({
     if (activeCategory === 'today') return 'Tasks scheduled for completion today.';
     if (activeCategory === 'scheduled') return 'Upcoming events and deadlines.';
     if (activeCategory === 'important') return 'Highly critical items needing immediate attention.';
+    if (activeCategory === 'dos') return 'Track and log what you are doing throughout the day.';
     
     return 'Manage project items and checklist goals.';
   };
@@ -81,7 +84,7 @@ export default function DashboardHeader({
           <input
             type="text"
             className="form-input"
-            placeholder="Search tasks..."
+            placeholder={activeCategory === 'dos' ? "Search daily logs..." : "Search tasks..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
