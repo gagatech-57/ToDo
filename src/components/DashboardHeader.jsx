@@ -23,7 +23,7 @@ export default function DashboardHeader({
     if (activeCategory === 'today') return "Today's Agenda";
     if (activeCategory === 'scheduled') return 'Scheduled Focus';
     if (activeCategory === 'important') return 'Important Priority';
-    if (activeCategory === 'dos') return "Daily Do's";
+    if (activeCategory === 'dos') return "Day Manager";
     
     const cat = categories.find(c => c.id === activeCategory);
     return cat ? `${cat.name} Workspace` : 'Workspace';

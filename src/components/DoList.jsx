@@ -238,7 +238,7 @@ export default function DoList({
       <div className="dashboard-right-header" style={{ marginBottom: '16px' }}>
         <h3 className="onboarding-title" style={{ fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Clock size={22} style={{ color: 'var(--primary)' }} />
-          <span>Daily Do's Timeline</span>
+          <span>Day Manager Timeline</span>
         </h3>
         <p className="onboarding-sub" style={{ fontSize: '0.82rem', marginTop: '2px', opacity: 0.8 }}>
           {getHeaderDateLabel()}

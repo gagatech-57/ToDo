@@ -150,7 +150,7 @@ export default function Sidebar({
           >
             <div className="sidebar-item-left">
               <CheckSquare size={18} style={{ color: 'var(--primary)' }} />
-              <span>Do's</span>
+              <span>Day Manager</span>
             </div>
             <span className="sidebar-item-count">{dos.length}</span>
           </li>

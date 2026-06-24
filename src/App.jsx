@@ -46,6 +46,7 @@ export default function App() {
     const day = String(d.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   });
+  const [showDayManagerAlert, setShowDayManagerAlert] = useState(false);
 
   // Toast notifier helper
   // Toast notifier helper
@@ -178,6 +179,33 @@ export default function App() {
 
   // Authentication State
   const [user, setUser] = useLocalStorage('aether_user', null);
+
+  // Day Manager feature alert pop-up state
+  useEffect(() => {
+    if (user) {
+      const seen = localStorage.getItem(`gaga_day_manager_alert_seen_user_${user.id}`);
+      if (!seen) {
+        setShowDayManagerAlert(true);
+      }
+    } else {
+      setShowDayManagerAlert(false);
+    }
+  }, [user]);
+
+  const handleCloseAlert = () => {
+    if (user) {
+      localStorage.setItem(`gaga_day_manager_alert_seen_user_${user.id}`, 'true');
+    }
+    setShowDayManagerAlert(false);
+  };
+
+  const handleViewFeature = () => {
+    if (user) {
+      localStorage.setItem(`gaga_day_manager_alert_seen_user_${user.id}`, 'true');
+    }
+    setActiveCategory('dos');
+    setShowDayManagerAlert(false);
+  };
 
   // Viewport Responsive State
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
@@ -667,6 +695,50 @@ export default function App() {
           </div>
         ))}
       </div>
+
+      {/* Day Manager Feature Welcome Alert Modal */}
+      {showDayManagerAlert && (
+        <div className="modal-backdrop" style={{ zIndex: 99999 }}>
+          <div className="modal-content glass-panel scale-in" style={{ maxWidth: '400px', padding: '28px', textAlign: 'center', position: 'relative' }} onClick={(e) => e.stopPropagation()}>
+            <div className="alert-badge" style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, var(--logo-start), var(--logo-end))',
+              color: 'white',
+              marginBottom: '20px',
+              boxShadow: '0 8px 24px rgba(0, 122, 255, 0.3)'
+            }}>
+              <Activity size={28} />
+            </div>
+            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '10px', color: 'var(--text-primary)' }}>
+              Introducing Day Manager!
+            </h3>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '24px' }}>
+              Track, schedule, and log exactly what you are doing throughout the day. Manage your daily timeline step-by-step with standard weekly calendars.
+            </p>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button 
+                className="btn btn-secondary" 
+                onClick={handleCloseAlert}
+                style={{ flex: 1, padding: '10px 16px', justifyContent: 'center' }}
+              >
+                Later
+              </button>
+              <button 
+                className="btn btn-primary" 
+                onClick={handleViewFeature}
+                style={{ flex: 1, padding: '10px 16px', justifyContent: 'center' }}
+              >
+                View Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
