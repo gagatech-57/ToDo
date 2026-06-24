@@ -41,12 +41,16 @@ export default function DoList({
     return `${year}-${month}-${dayNum}`;
   };
 
-  // Helper to get current time formatted as HH:MM
+  // Helper to get current time formatted as 12-hour AM/PM
   const getCurrentTime = () => {
     const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
+    let hours = now.getHours();
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const hourStr = String(hours).padStart(2, '0');
+    return `${hourStr}:${minutes} ${ampm}`;
   };
 
   // Pre-fill time with current time on mount
@@ -145,7 +149,7 @@ export default function DoList({
             <span>Log Daily Activity</span>
           </h4>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: '10px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr', gap: '10px' }}>
               <input
                 type="text"
                 className="form-input"

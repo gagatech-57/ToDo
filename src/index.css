@@ -2436,5 +2436,43 @@ select option {
   opacity: 0.25;
 }
 
+/* Mobile responsive constraints for standard weekly selector strip */
+@media (max-width: 480px) {
+  .do-date-selector {
+    padding: 10px 8px;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .do-date-selector.collapsed {
+    padding: 8px 12px;
+    margin-bottom: 10px;
+  }
+  .do-week-strip-container {
+    gap: 4px;
+  }
+  .do-days-strip {
+    gap: 4px;
+  }
+  .do-month-nav-btn {
+    width: 24px;
+    height: 24px;
+  }
+  .do-month-nav-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  .do-day-item {
+    height: 48px;
+  }
+  .do-day-weekday {
+    font-size: 0.58rem;
+    letter-spacing: 0px;
+    margin-bottom: 0px;
+  }
+  .do-day-number {
+    font-size: 0.9rem;
+  }
+}
+
 
 

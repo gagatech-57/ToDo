@@ -153,7 +153,7 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
                     transition: 'transform var(--transition-fast), background var(--transition-fast)'
                   }}
                 >
-                  <span className="profile-avatar" style={{ marginRight: '12px', width: '32px', height: '32px', fontSize: '0.9rem' }}>
+                  <span className="profile-avatar" style={{ marginRight: '12px', width: '32px', height: '32px', fontSize: '0.9rem', flexShrink: 0 }}>
                     {account.name.charAt(0).toUpperCase()}
                   </span>
                   <div style={{ textAlign: 'left', flex: 1 }}>
@@ -165,7 +165,7 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
                     className="btn-icon forget-account-btn"
                     onClick={(e) => handleForgetAccount(e, account.id)}
                     title="Forget account"
-                    style={{ width: '24px', height: '24px', border: 'none', background: 'transparent' }}
+                    style={{ width: '24px', height: '24px', border: 'none', background: 'transparent', flexShrink: 0 }}
                   >
                     <X size={14} />
                   </button>
