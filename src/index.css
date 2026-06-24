@@ -2240,6 +2240,36 @@ select option {
   padding: 14px 16px;
   margin-bottom: 20px;
   box-shadow: var(--card-shadow);
+  transition: padding var(--transition-fast), margin-bottom var(--transition-fast), gap var(--transition-fast);
+}
+
+.do-date-selector.collapsed {
+  gap: 0px;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+}
+
+.do-collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.do-collapse-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .do-collapse-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .do-month-nav {

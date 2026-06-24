@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Clock, Plus, Trash2, Activity, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Clock, Plus, Trash2, Activity, ChevronLeft, ChevronRight, Calendar, ChevronUp, ChevronDown } from 'lucide-react';
 
 export default function DoList({
   dos,
@@ -11,14 +11,23 @@ export default function DoList({
 }) {
   const [time, setTime] = useState('');
   const [text, setText] = useState('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-  // weekEndDate represents the date of the 7th day shown in the weekly strip
-  const [weekEndDate, setWeekEndDate] = useState(selectedDate || todayStr);
-
-  const activeDayRef = useRef(null);
+  // Helper to find the Sunday of the week containing a date
+  const getStartOfWeek = (dateStr) => {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const date = new Date(y, m - 1, d);
+    const day = date.getDay(); // 0 is Sunday, 1 is Monday, etc.
+    date.setDate(date.getDate() - day);
+    
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const dayNum = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${dayNum}`;
+  };
 
   // Helper to add/subtract days from a date string (YYYY-MM-DD)
   const addDays = (dateStr, offset) => {
@@ -28,16 +37,9 @@ export default function DoList({
     
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    const dayNum = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${dayNum}`;
   };
-
-  // Sync weekEndDate when selectedDate changes (e.g. via calendar date picker)
-  useEffect(() => {
-    if (selectedDate) {
-      setWeekEndDate(selectedDate);
-    }
-  }, [selectedDate]);
 
   // Helper to get current time formatted as HH:MM
   const getCurrentTime = () => {
@@ -72,20 +74,17 @@ export default function DoList({
     return `${months[parseInt(m, 10) - 1]} ${y}`;
   };
 
-  // Weekly Navigation Handlers
+  // Weekly Navigation Handlers (navigating by exactly 1 week)
   const handlePrevWeek = () => {
-    const newEnd = addDays(weekEndDate, -7);
-    setWeekEndDate(newEnd);
-    setSelectedDate(newEnd);
+    setSelectedDate(addDays(selectedDate, -7));
   };
 
   const handleNextWeek = () => {
-    let newEnd = addDays(weekEndDate, 7);
-    if (newEnd > todayStr) {
-      newEnd = todayStr;
+    let newDate = addDays(selectedDate, 7);
+    if (newDate > todayStr) {
+      newDate = todayStr;
     }
-    setWeekEndDate(newEnd);
-    setSelectedDate(newEnd);
+    setSelectedDate(newDate);
   };
 
   const handleDateChange = (dateVal) => {
@@ -94,12 +93,16 @@ export default function DoList({
     setSelectedDate(dateVal);
   };
 
-  const isAtLatestWeek = weekEndDate >= todayStr;
+  // Right chevron boundary check: disable if currently selected date's week is today's week
+  const viewedWeekStart = getStartOfWeek(selectedDate || todayStr);
+  const currentWeekStart = getStartOfWeek(todayStr);
+  const isAtLatestWeek = viewedWeekStart >= currentWeekStart;
 
-  // Generate 7 days array ending at weekEndDate
+  // Generate 7 days array (Sunday to Saturday) containing the selectedDate
+  const weekStart = getStartOfWeek(selectedDate || todayStr);
   const daysArray = [];
-  for (let i = -6; i <= 0; i++) {
-    daysArray.push(addDays(weekEndDate, i));
+  for (let i = 0; i < 7; i++) {
+    daysArray.push(addDays(weekStart, i));
   }
 
   const dayElements = daysArray.map((dStr) => {
@@ -113,7 +116,6 @@ export default function DoList({
     return (
       <button
         key={dStr}
-        ref={isActive ? activeDayRef : null}
         className={`do-day-item ${isActive ? 'active' : ''} ${isFuture ? 'disabled' : ''}`}
         onClick={() => !isFuture && setSelectedDate(dStr)}
         disabled={isFuture}
@@ -171,10 +173,10 @@ export default function DoList({
       )}
 
       {/* Date Selector Weekly Navigation Strip */}
-      <div className="do-date-selector">
-        <div className="do-month-nav" style={{ justifyContent: 'center', marginBottom: '8px' }}>
+      <div className={`do-date-selector ${isCollapsed ? 'collapsed' : ''}`}>
+        <div className="do-month-nav">
           <div className="do-month-label-wrapper">
-            <span>{getMonthYearLabel(selectedDate)}</span>
+            <span>{getMonthYearLabel(selectedDate || todayStr)}</span>
             <div className="do-calendar-picker-wrapper" style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
               <button className="do-calendar-btn" title="Pick Date" type="button">
                 <Calendar size={15} />
@@ -188,33 +190,44 @@ export default function DoList({
               </button>
             </div>
           </div>
-        </div>
 
-        <div className="do-week-strip-container">
           <button 
-            className="do-month-nav-btn" 
-            onClick={handlePrevWeek}
-            title="Previous 7 Days"
+            className="do-collapse-btn" 
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            title={isCollapsed ? "Show Days" : "Hide Days"}
             type="button"
           >
-            <ChevronLeft size={18} />
+            {isCollapsed ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
           </button>
+        </div>
 
-          <div className="do-days-strip">
-            {dayElements}
+        {!isCollapsed && (
+          <div className="do-week-strip-container fade-in">
+            <button 
+              className="do-month-nav-btn" 
+              onClick={handlePrevWeek}
+              title="Previous Week"
+              type="button"
+            >
+              <ChevronLeft size={18} />
+            </button>
+
+            <div className="do-days-strip">
+              {dayElements}
+            </div>
+
+            <button 
+              className="do-month-nav-btn" 
+              onClick={handleNextWeek}
+              disabled={isAtLatestWeek}
+              style={{ opacity: isAtLatestWeek ? 0.25 : 1, cursor: isAtLatestWeek ? 'not-allowed' : 'pointer' }}
+              title="Next Week"
+              type="button"
+            >
+              <ChevronRight size={18} />
+            </button>
           </div>
-
-          <button 
-            className="do-month-nav-btn" 
-            onClick={handleNextWeek}
-            disabled={isAtLatestWeek}
-            style={{ opacity: isAtLatestWeek ? 0.25 : 1, cursor: isAtLatestWeek ? 'not-allowed' : 'pointer' }}
-            title="Next 7 Days"
-            type="button"
-          >
-            <ChevronRight size={18} />
-          </button>
-        </div>
+        )}
       </div>
 
       {/* Timeline view */}
