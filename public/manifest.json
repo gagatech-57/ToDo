@@ -1,0 +1,21 @@
+{
+  "name": "Gaga ToDo",
+  "short_name": "Gaga ToDo",
+  "description": "Premium task management and day manager application.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121214",
+  "theme_color": "#007aff",
+  "icons": [
+    {
+      "src": "/checklist.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/checklist.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

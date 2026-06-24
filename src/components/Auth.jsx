@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Lock, Mail, User, ShieldAlert, CheckSquare, Square, ArrowRight, Sun, Moon, X } from 'lucide-react';
+import { Lock, Mail, User, ShieldAlert, CheckSquare, Square, ArrowRight, X } from 'lucide-react';
 
-export default function Auth({ onLogin, theme, toggleTheme }) {
+export default function Auth({ onLogin }) {
   const [rememberedAccounts, setRememberedAccounts] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('gaga_remembered_accounts') || '[]');
@@ -117,12 +117,6 @@ export default function Auth({ onLogin, theme, toggleTheme }) {
         <div className="blob blob-2"></div>
       </div>
 
-      <div className="auth-header-controls">
-        {/* Simple Theme Toggle */}
-        <button className="btn-icon" onClick={toggleTheme}>
-          {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-        </button>
-      </div>
 
       <div className="auth-card glass-panel">
         <div className="auth-card-header" style={{ marginBottom: '24px' }}>

@@ -34,7 +34,6 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [editingTodo, setEditingTodo] = useState(null);
-  const [theme, setTheme] = useLocalStorage('aether_theme', 'dark');
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
@@ -47,6 +46,10 @@ export default function App() {
     return `${year}-${month}-${day}`;
   });
   const [showDayManagerAlert, setShowDayManagerAlert] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallAlert, setShowInstallAlert] = useState(false);
+  const [dontShowInstallAgain, setDontShowInstallAgain] = useState(false);
+  const [showIosInstallInstructions, setShowIosInstallInstructions] = useState(false);
 
   // Toast notifier helper
   // Toast notifier helper
@@ -207,6 +210,48 @@ export default function App() {
     setShowDayManagerAlert(false);
   };
 
+  // Capture beforeinstallprompt event for PWA
+  useEffect(() => {
+    const handleBeforeInstall = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+  }, []);
+
+  // Display PWA install alert after short delay if conditions met
+  useEffect(() => {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    const neverShow = localStorage.getItem('gaga_pwa_install_never_show') === 'true';
+    if (!isStandalone && !neverShow) {
+      const timer = setTimeout(() => {
+        setShowInstallAlert(true);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleInstallApp = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`PWA install choice: ${outcome}`);
+      setDeferredPrompt(null);
+      setShowInstallAlert(false);
+    } else {
+      // Fallback instruction popup for iOS or unsupported browsers
+      setShowIosInstallInstructions(true);
+    }
+  };
+
+  const handleLaterInstall = () => {
+    if (dontShowInstallAgain) {
+      localStorage.setItem('gaga_pwa_install_never_show', 'true');
+    }
+    setShowInstallAlert(false);
+  };
+
   // Viewport Responsive State
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
 
@@ -272,8 +317,8 @@ export default function App() {
 
   // Sync theme with DOM root node
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }, []);
 
   // Auto-open modal form on mobile when editing is triggered
   useEffect(() => {
@@ -281,10 +326,6 @@ export default function App() {
       setIsFormOpen(true);
     }
   }, [editingTodo, isMobile]);
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
 
   const handleLogout = () => {
     setUser(null);
@@ -536,8 +577,6 @@ export default function App() {
             showToast('Logged in successfully! Welcome back 👋', 'success');
           }
         }} 
-        theme={theme} 
-        toggleTheme={toggleTheme} 
       />
     );
   }
@@ -570,8 +609,6 @@ export default function App() {
           categories={categories}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          theme={theme}
-          toggleTheme={toggleTheme}
           setIsMobileOpen={setIsMobileOpen}
           onOpenForm={() => setIsFormOpen(true)}
           user={user}
@@ -736,6 +773,98 @@ export default function App() {
                 View Now
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* PWA Custom Installation Promotion Alert Popup */}
+      {showInstallAlert && (
+        <div className="modal-backdrop" style={{ zIndex: 99999 }}>
+          <div className="modal-content glass-panel scale-in" style={{ maxWidth: '400px', padding: '28px', textAlign: 'center', position: 'relative' }} onClick={(e) => e.stopPropagation()}>
+            <div className="alert-badge" style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, var(--logo-start), var(--logo-end))',
+              color: 'white',
+              marginBottom: '20px',
+              boxShadow: '0 8px 24px rgba(0, 122, 255, 0.3)'
+            }}>
+              <Plus size={28} />
+            </div>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '10px', color: 'var(--text-primary)' }}>
+              Add to Home Screen
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '18px' }}>
+              Install Gaga ToDo on your home screen to launch it directly like a native mobile app!
+            </p>
+            
+            {/* Don't show this again checkbox */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '22px', userSelect: 'none' }}>
+              <input 
+                id="dont-show-install-checkbox"
+                type="checkbox"
+                checked={dontShowInstallAgain}
+                onChange={(e) => setDontShowInstallAgain(e.target.checked)}
+                style={{ width: '16px', height: '16px', cursor: 'pointer', accentColor: 'var(--primary)' }}
+              />
+              <label htmlFor="dont-show-install-checkbox" style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                Don't show this again
+              </label>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button 
+                className="btn btn-secondary" 
+                onClick={handleLaterInstall}
+                style={{ flex: 1, padding: '10px 16px', justifyContent: 'center' }}
+              >
+                Later
+              </button>
+              <button 
+                className="btn btn-primary" 
+                onClick={handleInstallApp}
+                style={{ flex: 1, padding: '10px 16px', justifyContent: 'center' }}
+              >
+                Add App
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* iOS / Safari Share Walkthrough Instruction Overlay */}
+      {showIosInstallInstructions && (
+        <div className="modal-backdrop" style={{ zIndex: 100000 }} onClick={() => setShowIosInstallInstructions(false)}>
+          <div className="modal-content glass-panel scale-in" style={{ maxWidth: '400px', padding: '28px', textAlign: 'center', position: 'relative' }} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '14px', color: 'var(--text-primary)' }}>
+              How to Install on iPhone
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '20px', textAlign: 'left' }}>
+              Since Chrome native installation is limited on iOS, follow these simple Safari browser steps:
+            </p>
+            <ol style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, textAlign: 'left', paddingLeft: '20px', marginBottom: '24px' }}>
+              <li>Open this website in the <strong>Safari</strong> browser.</li>
+              <li>Tap the <strong>Share</strong> button at the bottom of the screen (the square icon with an upward arrow).</li>
+              <li>Scroll down the list and select <strong>Add to Home Screen</strong>.</li>
+              <li>Tap <strong>Add</strong> in the top-right corner to install!</li>
+            </ol>
+            <button 
+              className="btn btn-primary" 
+              onClick={() => {
+                setShowIosInstallInstructions(false);
+                if (dontShowInstallAgain) {
+                  localStorage.setItem('gaga_pwa_install_never_show', 'true');
+                }
+                setShowInstallAlert(false);
+              }}
+              style={{ width: '100%', padding: '10px 16px', justifyContent: 'center' }}
+            >
+              Got it
+            </button>
           </div>
         </div>
       )}

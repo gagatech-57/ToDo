@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Sun, Moon, Menu, Plus, LogOut } from 'lucide-react';
+import { Search, Menu, Plus, LogOut } from 'lucide-react';
 
 export default function DashboardHeader({
   activeCategory,
@@ -8,8 +8,6 @@ export default function DashboardHeader({
   setSearchQuery,
   sortBy,
   setSortBy,
-  theme,
-  toggleTheme,
   setIsMobileOpen,
   onOpenForm,
   user,
@@ -91,16 +89,8 @@ export default function DashboardHeader({
         </div>
       </div>
 
-      {/* Right section: Theme toggler + Profile avatar in last */}
+      {/* Right section: Profile avatar in last */}
       <div className="header-right">
-        {/* Theme Toggler */}
-        <button 
-          className="btn-icon" 
-          onClick={toggleTheme}
-          title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-        >
-          {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-        </button>
 
         {/* User Profile Avatar */}
         {user && (

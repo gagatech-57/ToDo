@@ -41,42 +41,8 @@
   --transition-normal: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   --transition-slow: 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 
-  /* iOS Light Glass Theme variables (Redesigned with Prismatic Sapphire & Platinum Glass Palette) */
-  --bg-primary: #f4f6fa; /* Beautiful cool platinum-white canvas background */
-  --bg-secondary: rgba(0, 122, 255, 0.03); /* Soft translucent blue-tinted secondary background */
-  --bg-card: rgba(255, 255, 255, 0.72); /* Glass Cards */
-  --text-primary: #1e293b; /* Deep slate charcoal text (highly readable) */
-  --text-secondary: #475569; /* Soft slate grey secondary text */
-  --text-tertiary: #64748b; /* Muted slate grey tertiary text */
-  --border-color: rgba(0, 122, 255, 0.08); /* Clean translucent blue-grey border */
-  --border-focus: rgba(0, 122, 255, 0.4);
-  --glass-blur: blur(30px);
-  --primary-glow: rgba(0, 122, 255, 0.04);
-  --card-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.05), 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 -1px 0 rgba(0, 0, 0, 0.01) inset;
-  --sidebar-shadow: 1px 0 0 0 rgba(0, 122, 255, 0.06);
-  --todo-item-bg: rgba(255, 255, 255, 0.85); /* Slightly less translucent todo cards */
-  --scrollbar-track: rgba(0, 122, 255, 0.03);
-  --scrollbar-thumb: rgba(0, 122, 255, 0.15);
-  --scrollbar-thumb-hover: rgba(0, 122, 255, 0.3);
-
-  /* Sidebar styling variables (Light mode) */
-  --sidebar-item-hover: rgba(0, 0, 0, 0.04);
-  --sidebar-item-active: rgba(0, 122, 255, 0.08);
-  --sidebar-badge-bg: rgba(0, 0, 0, 0.05);
-
-  /* Select dropdown option solid colors */
-  --select-option-bg: #ffffff;
-  --select-option-text: #1e293b;
-
-  /* Solid toast notification background */
-  --toast-bg: #ffffff;
-}
-
-[data-theme="dark"] {
   /* iOS Dark Glass Theme variables */
-  --primary: #007aff; /* Restore Apple Blue for Dark Mode */
   --primary-hover: #1485ff;
-  --primary-glow-color: 0, 122, 255;
   --bg-primary: #000000; /* Apple True Black background */
   --bg-secondary: rgba(28, 28, 30, 0.35);
   --bg-card: rgba(28, 28, 30, 0.45);
@@ -94,7 +60,7 @@
   --scrollbar-thumb: rgba(255, 255, 255, 0.1);
   --scrollbar-thumb-hover: rgba(255, 255, 255, 0.2);
 
-  /* Sidebar styling variables (Dark mode) */
+  /* Sidebar styling variables */
   --sidebar-item-hover: rgba(255, 255, 255, 0.08);
   --sidebar-item-active: rgba(0, 122, 255, 0.15);
   --sidebar-badge-bg: rgba(255, 255, 255, 0.1);
@@ -179,7 +145,7 @@ h1, h2, h3, h4, h5, h6 {
 .blob-1 {
   width: 650px;
   height: 650px;
-  background: radial-gradient(circle, rgba(169, 192, 224, 0.32) 0%, rgba(169, 192, 224, 0) 70%);
+  background: radial-gradient(circle, rgba(0, 122, 255, 0.15) 0%, rgba(0, 0, 0, 0) 75%);
   top: -15%;
   right: -10%;
   animation: float1 25s infinite ease-in-out;
@@ -188,7 +154,7 @@ h1, h2, h3, h4, h5, h6 {
 .blob-2 {
   width: 750px;
   height: 750px;
-  background: radial-gradient(circle, rgba(244, 254, 255, 0.22) 0%, rgba(244, 254, 255, 0) 75%);
+  background: radial-gradient(circle, rgba(175, 82, 222, 0.12) 0%, rgba(0, 0, 0, 0) 75%);
   bottom: -15%;
   left: -10%;
   animation: float2 30s infinite ease-in-out;
@@ -197,20 +163,10 @@ h1, h2, h3, h4, h5, h6 {
 .blob-3 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(0, 122, 255, 0.22) 0%, rgba(0, 122, 255, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 45, 85, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
   top: 30%;
   left: 20%;
   animation: float3 28s infinite ease-in-out;
-}
-
-[data-theme="dark"] .blob-1 {
-  background: radial-gradient(circle, rgba(0, 122, 255, 0.15) 0%, rgba(0, 0, 0, 0) 75%);
-}
-[data-theme="dark"] .blob-2 {
-  background: radial-gradient(circle, rgba(175, 82, 222, 0.12) 0%, rgba(0, 0, 0, 0) 75%);
-}
-[data-theme="dark"] .blob-3 {
-  background: radial-gradient(circle, rgba(255, 45, 85, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
 }
 
 /* App Layout */
@@ -856,12 +812,6 @@ select option {
 }
 
 .filter-tab.active {
-  background-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  color: var(--text-primary);
-}
-
-[data-theme="dark"] .filter-tab.active {
   background-color: rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
 }
@@ -1529,7 +1479,7 @@ select option {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(14, 47, 118, 0.45);
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 200;
   display: flex;
   align-items: center;
@@ -1538,10 +1488,6 @@ select option {
   -webkit-backdrop-filter: blur(20px);
   padding: 24px;
   animation: fadeIn var(--transition-fast) forwards;
-}
-
-[data-theme="dark"] .modal-backdrop {
-  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .modal-content {
@@ -1660,10 +1606,6 @@ select option {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-[data-theme="light"] .auth-tab.active {
-  background-color: var(--primary);
-  color: white;
-}
 
 .auth-error-banner {
   display: flex;
@@ -1838,7 +1780,7 @@ select option {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 20px rgba(14, 47, 118, 0.25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   z-index: 90;
   transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
@@ -1846,10 +1788,6 @@ select option {
 
 .mobile-fab:active {
   transform: scale(0.92);
-}
-
-[data-theme="dark"] .mobile-fab {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* New User Onboarding Guide */
@@ -1925,15 +1863,10 @@ select option {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--primary);
-  background-color: rgba(14, 47, 118, 0.05);
+  background-color: rgba(0, 122, 255, 0.1);
   padding: 12px 24px;
   border-radius: 30px;
   display: inline-block;
-}
-
-[data-theme="dark"] .onboarding-footer {
-  background-color: rgba(0, 122, 255, 0.1);
-  color: #007aff;
 }
 
 /* Adjust onboarding grid for mobile viewports */
@@ -1950,11 +1883,6 @@ select option {
 
 /* Premium Highlighted Gaga Logo Branding */
 :root {
-  --logo-start: #001f3f; /* Navy */
-  --logo-end: #007aff;   /* Royal Blue */
-}
-
-[data-theme="dark"] {
   --logo-start: #0044cc; /* Rich Dark Blue */
   --logo-end: #00d2ff;   /* Neon Light Blue */
 }
@@ -1965,27 +1893,16 @@ select option {
   background: linear-gradient(135deg, var(--logo-start), var(--logo-end)); /* Blue and Navy mixed gradient */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 20px rgba(0, 122, 255, 0.15);
+  text-shadow: 0 0 25px rgba(0, 210, 255, 0.35);
   letter-spacing: -1px; /* Tight spacing for premium modern look */
   margin-right: 2px;
-}
-
-[data-theme="dark"] .logo-gaga {
-  background: linear-gradient(135deg, var(--logo-start), var(--logo-end)); /* Dark mode navy/blue mixed gradient */
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 25px rgba(0, 210, 255, 0.35);
 }
 
 .logo-todo {
   font-family: 'Outfit', -apple-system, sans-serif;
   font-weight: 600; /* semi-bold for clean readability next to Gaga */
-  color: var(--text-secondary);
-  letter-spacing: -0.5px;
-}
-
-[data-theme="dark"] .logo-todo {
   color: #f2f2f7;
+  letter-spacing: -0.5px;
 }
 
 /* Remembered Account Items styles */
@@ -2000,14 +1917,6 @@ select option {
   background: rgba(255, 255, 255, 0.12) !important;
   transform: translateY(-1.5px);
   box-shadow: 0 4px 15px rgba(0, 122, 255, 0.05);
-}
-
-[data-theme="light"] .remembered-account-item {
-  background: rgba(255, 255, 255, 0.85);
-}
-
-[data-theme="light"] .remembered-account-item:hover {
-  background: rgba(0, 122, 255, 0.05) !important;
 }
 
 .forget-account-btn {
@@ -2224,11 +2133,6 @@ select option {
   opacity: 1;
 }
 
-/* Light Mode Card adjustments */
-[data-theme="light"] .do-log-card {
-  background-color: rgba(255, 255, 255, 0.85);
-}
-
 /* Date Selector strip styles */
 .do-date-selector {
   display: flex;
@@ -2268,9 +2172,6 @@ select option {
   color: var(--text-primary);
 }
 
-[data-theme="light"] .do-collapse-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
 
 .do-month-nav {
   display: flex;
@@ -2426,15 +2327,6 @@ select option {
   opacity: 0.9;
 }
 
-[data-theme="light"] .do-day-item {
-  background: rgba(0, 0, 0, 0.02);
-  color: var(--text-secondary);
-}
-
-[data-theme="light"] .do-day-item.disabled {
-  background: rgba(0, 0, 0, 0.01);
-  opacity: 0.25;
-}
 
 /* Mobile responsive constraints for standard weekly selector strip */
 @media (max-width: 480px) {
