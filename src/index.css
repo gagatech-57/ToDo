@@ -2366,5 +2366,120 @@ select option {
   }
 }
 
+/* Subtask add button custom active/inactive styling & animations */
+.subtask-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
 
+.subtask-add-btn.is-empty {
+  opacity: 0.6;
+  cursor: default;
+}
 
+.subtask-add-btn.has-text {
+  opacity: 1;
+  background-color: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 0 12px rgba(0, 122, 255, 0.35);
+  cursor: pointer;
+}
+
+.subtask-add-btn.has-text:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+.subtask-btn-icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+
+.subtask-icon {
+  position: absolute;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.rotate-in {
+  transform: rotate(0deg);
+  opacity: 1;
+  animation: spinIn 0.25s forwards;
+}
+
+.rotate-out {
+  transform: rotate(0deg);
+  opacity: 1;
+  animation: spinOut 0.25s forwards;
+}
+
+@keyframes spinIn {
+  from {
+    transform: rotate(-90deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes spinOut {
+  from {
+    transform: rotate(90deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Elastic jelly animation effect */
+@keyframes jelly {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-2px) scale(1.08, 0.92); }
+  40% { transform: translateY(-2px) scale(0.92, 1.08); }
+  50% { transform: translateY(-2px) scale(1.04, 0.96); }
+  65% { transform: translateY(-2px) scale(0.98, 1.02); }
+  75% { transform: translateY(-2px) scale(1.01, 0.99); }
+  100% { transform: translateY(-2px) scale(1); }
+}
+
+.jelly-hover {
+  transition: all var(--transition-fast);
+}
+
+.jelly-hover:hover {
+  animation: jelly 0.6s ease forwards;
+}
+
+/* Mobile Day Manager stat shortcut card styling */
+.day-manager-stat-card {
+  cursor: pointer;
+  border: 1px solid rgba(0, 122, 255, 0.15) !important;
+  background: rgba(0, 122, 255, 0.05) !important;
+  transition: transform var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.day-manager-stat-card:hover {
+  background-color: rgba(0, 122, 255, 0.1) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.15);
+}
+
+.day-manager-stat-card:active {
+  transform: scale(0.98);
+}

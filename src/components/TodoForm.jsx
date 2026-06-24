@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Check, ClipboardList, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Plus, Check, ClipboardList, X, Minus } from 'lucide-react';
 
 export default function TodoForm({
   categories,
@@ -18,6 +18,7 @@ export default function TodoForm({
   // Subtasks list state for this todo item
   const [subtasks, setSubtasks] = useState([]);
   const [subtaskText, setSubtaskText] = useState('');
+  const subtaskInputRef = useRef(null);
 
   // Prefill form when editing a todo
   useEffect(() => {
@@ -70,6 +71,11 @@ export default function TodoForm({
     
     setSubtasks([...subtasks, newSub]);
     setSubtaskText('');
+    
+    // Auto-focus back on the subtask input for sequential adding
+    if (subtaskInputRef.current) {
+      subtaskInputRef.current.focus();
+    }
   };
 
   const handleRemoveSubtask = (id) => {
@@ -80,13 +86,23 @@ export default function TodoForm({
     e.preventDefault();
     if (!title.trim()) return;
 
+    let finalSubtasks = [...subtasks];
+    if (subtaskText.trim()) {
+      const newSub = {
+        id: crypto.randomUUID(),
+        text: subtaskText.trim(),
+        completed: false
+      };
+      finalSubtasks.push(newSub);
+    }
+
     const todoData = {
       title: title.trim(),
       description: desc.trim(),
       categoryId: catId,
       priority,
       dueDate,
-      subtasks
+      subtasks: finalSubtasks
     };
 
     if (editingTodo) {
@@ -221,6 +237,7 @@ export default function TodoForm({
 
           <div className="subtask-input-row">
             <input
+              ref={subtaskInputRef}
               type="text"
               className="form-input"
               placeholder="Add step..."
@@ -237,11 +254,17 @@ export default function TodoForm({
             />
             <button
               type="button"
-              className="btn btn-secondary"
+              className={`btn subtask-add-btn ${subtaskText.trim() ? 'has-text' : 'is-empty'}`}
               onClick={handleAddSubtask}
               style={{ padding: '8px 12px' }}
             >
-              <Plus size={16} />
+              <span className="subtask-btn-icon-container">
+                {subtaskText.trim() ? (
+                  <Plus size={16} className="subtask-icon rotate-in" />
+                ) : (
+                  <Minus size={16} className="subtask-icon rotate-out" />
+                )}
+              </span>
             </button>
           </div>
         </div>

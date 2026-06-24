@@ -614,6 +614,7 @@ export default function App() {
           user={user}
           onLogout={handleLogout}
           isMobile={isMobile}
+          setActiveCategory={setActiveCategory}
         />
 
         <div className="dashboard-grid">
@@ -624,7 +625,11 @@ export default function App() {
                 <DoFormDesktop onAddDo={handleAddDo} />
               ) : (
                 <>
-                  <StatsSection todos={filteredStatsTodos} />
+                  <StatsSection 
+                    todos={filteredStatsTodos} 
+                    isMobile={isMobile}
+                    setActiveCategory={setActiveCategory}
+                  />
                   
                   {/* Show static form on BIG SCREEN only */}
                   {!isMobile && (
