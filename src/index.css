@@ -1252,10 +1252,12 @@ select option {
     height: auto;
     min-height: auto;
     flex: none;
-    padding-bottom: 100px;
+    padding-bottom: 30px;
   }
   
   .main-workspace {
+    display: grid;
+    grid-template-rows: auto 1fr;
     overflow: hidden;
     height: 100vh;
     height: 100dvh;
@@ -1306,6 +1308,8 @@ select option {
   }
   
   .main-workspace {
+    display: grid;
+    grid-template-rows: auto 1fr;
     padding: 16px;
     height: 100vh;
     height: 100dvh;
@@ -1314,7 +1318,7 @@ select option {
   }
 
   .dashboard-grid {
-    padding-bottom: 90px;
+    padding-bottom: 30px;
   }
   
   .mobile-nav-toggle {
@@ -1381,6 +1385,8 @@ select option {
 /* Mobile Screen Tuning specifically for <= 480px viewports */
 @media (max-width: 480px) {
   .main-workspace {
+    display: grid;
+    grid-template-rows: auto 1fr;
     padding: 12px 8px;
     height: 100vh;
     height: 100dvh;
@@ -1389,7 +1395,7 @@ select option {
   }
   
   .dashboard-grid {
-    padding-bottom: 95px;
+    padding-bottom: 30px;
   }
 
   .do-container {
@@ -1403,7 +1409,7 @@ select option {
     height: auto;
     min-height: auto;
     flex: none;
-    padding-bottom: 100px;
+    padding-bottom: 30px;
   }
   
   .auth-card {
