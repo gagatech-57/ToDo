@@ -1252,7 +1252,7 @@ select option {
     height: auto;
     min-height: auto;
     flex: none;
-    padding-bottom: 20px;
+    padding-bottom: 100px;
   }
   
   .main-workspace {
@@ -1403,7 +1403,7 @@ select option {
     height: auto;
     min-height: auto;
     flex: none;
-    padding-bottom: 24px;
+    padding-bottom: 100px;
   }
   
   .auth-card {
@@ -1640,6 +1640,8 @@ select option {
   font-weight: 800;
   margin-bottom: 8px;
   background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+  color: transparent;
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -2031,6 +2033,7 @@ select option {
   font-family: 'Outfit', -apple-system, sans-serif;
   font-weight: 800; /* Extra-bold modern style */
   background: linear-gradient(135deg, var(--logo-start), var(--logo-end)); /* Blue and Navy mixed gradient */
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 25px rgba(0, 210, 255, 0.35);
