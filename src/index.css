@@ -1793,21 +1793,97 @@ select option {
   background-color: rgba(255, 255, 255, 0.08);
 }
 
-/* User Profile Avatar in Header */
-.header-profile {
+/* User Profile Container and Trigger Button */
+.header-profile-container {
+  position: relative;
+  display: inline-flex;
+}
+
+.header-profile-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast), filter var(--transition-fast);
+}
+
+.header-profile-btn:hover {
+  transform: scale(1.06);
+  filter: brightness(1.15);
+}
+
+.header-profile-btn:active {
+  transform: scale(0.95);
+}
+
+.header-avatar {
+  width: 38px;
+  height: 38px;
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0, 122, 255, 0.35);
+}
+
+/* User Profile Dropdown Menu */
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 10px;
+  min-width: 230px;
+  padding: 16px;
+  border-radius: 16px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(26, 26, 36, 0.96) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.profile-dropdown-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 4px 0;
+}
+
+.profile-dropdown-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border-color);
-  padding: 4px 10px;
-  border-radius: 30px;
-  margin-left: 6px;
-  transition: all var(--transition-fast);
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: background var(--transition-fast), transform var(--transition-fast), color var(--transition-fast);
+  text-align: left;
 }
 
-.header-profile:hover {
-  background-color: rgba(255, 255, 255, 0.12);
+.profile-dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.profile-dropdown-item.logout-item {
+  color: var(--danger);
+}
+
+.profile-dropdown-item.logout-item:hover {
+  background-color: rgba(255, 59, 48, 0.08);
+  color: #ff453a;
+}
+
+.profile-dropdown-item:active {
+  transform: scale(0.98);
 }
 
 .profile-avatar {
@@ -1828,15 +1904,6 @@ select option {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-primary);
-}
-
-.profile-logout {
-  opacity: 0.5;
-  transition: opacity var(--transition-fast);
-}
-
-.header-profile:hover .profile-logout {
-  opacity: 1;
 }
 
 /* Mobile Floating Action Button (FAB) */

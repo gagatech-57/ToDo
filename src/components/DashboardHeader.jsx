@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, Menu, Plus, LogOut } from 'lucide-react';
 
 export default function DashboardHeader({
@@ -14,6 +14,20 @@ export default function DashboardHeader({
   onLogout,
   isMobile
 }) {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   
   // Resolve Workspace/Category Header Name
   const getHeaderTitle = () => {
@@ -92,21 +106,51 @@ export default function DashboardHeader({
       {/* Right section: Profile avatar in last */}
       <div className="header-right">
 
-        {/* User Profile Avatar */}
+        {/* User Profile Avatar with Dropdown */}
         {user && (
-          <div className="header-profile" title={`Logged in as ${user.email}`}>
-            <span className="profile-avatar">
-              {user.name.charAt(0).toUpperCase()}
-            </span>
-            <span className="profile-name">{user.name}</span>
+          <div className="header-profile-container" ref={dropdownRef}>
             <button 
-              className="btn-icon profile-logout"
-              onClick={onLogout}
-              title="Logout"
-              style={{ border: 'none', width: '28px', height: '28px', background: 'transparent' }}
+              className="header-profile-btn"
+              onClick={() => setShowDropdown(!showDropdown)}
+              title="View profile options"
             >
-              <LogOut size={14} />
+              <span className="profile-avatar header-avatar">
+                {user.name.charAt(0).toUpperCase()}
+              </span>
             </button>
+
+            {showDropdown && (
+              <div className="profile-dropdown glass-panel scale-in">
+                {/* Profile header/details inside dropdown */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span className="profile-avatar" style={{ width: '40px', height: '40px', fontSize: '1.1rem', flexShrink: 0 }}>
+                    {user.name.charAt(0).toUpperCase()}
+                  </span>
+                  <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                      {user.name}
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                      {user.email}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="profile-dropdown-divider" />
+
+                {/* Logout option button */}
+                <button
+                  onClick={() => {
+                    setShowDropdown(false);
+                    onLogout();
+                  }}
+                  className="profile-dropdown-item logout-item"
+                >
+                  <LogOut size={16} />
+                  <span>Log Out</span>
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
