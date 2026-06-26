@@ -36,6 +36,9 @@ export default function Auth({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -47,29 +50,41 @@ export default function Auth({ onLogin }) {
     setEmail('');
     setPassword('');
     setTermsAccepted(false);
+    setNameError('');
+    setEmailError('');
+    setPasswordError('');
   };
 
   // Submit Login/Registration
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
-    if (!email.trim() || !password.trim()) {
-      setError('Please fill in all credentials.');
-      return;
+    setNameError('');
+    setEmailError('');
+    setPasswordError('');
+
+    let hasError = false;
+
+    if (!isLogin && !name.trim()) {
+      setNameError('Name is required.');
+      hasError = true;
     }
 
-    if (!isLogin) {
-      if (!name.trim()) {
-        setError('Please enter your name.');
-        return;
-      }
-      
-      // Terms Validation
-      if (!termsAccepted) {
-        setError('You must accept the Terms & Conditions to create an account.');
-        return;
-      }
+    if (!email.trim()) {
+      setEmailError('Email address is required.');
+      hasError = true;
+    }
+
+    if (!password.trim()) {
+      setPasswordError('Password is required.');
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    if (!isLogin && !termsAccepted) {
+      setError('You must accept the Terms & Conditions to create an account.');
+      return;
     }
 
     setLoading(true);
@@ -193,7 +208,7 @@ export default function Auth({ onLogin }) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} className="auth-form" noValidate>
           {/* Name Field (Register Only) */}
           {!isLogin && (
             <div className="form-group">
@@ -204,12 +219,17 @@ export default function Auth({ onLogin }) {
                   id="auth-name"
                   type="text"
                   placeholder="Your name"
-                  className="form-input"
+                  className={`form-input ${nameError ? 'input-error' : ''}`}
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => { setName(e.target.value); if (nameError) setNameError(''); }}
                   maxLength={30}
-                  required
                 />
+                {nameError && (
+                  <div className="field-error-msg">
+                    <span className="field-error-icon">!</span>
+                    {nameError}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -223,11 +243,16 @@ export default function Auth({ onLogin }) {
                 id="auth-email"
                 type="email"
                 placeholder="example@email.com"
-                className="form-input"
+                className={`form-input ${emailError ? 'input-error' : ''}`}
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+                onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(''); }}
               />
+              {emailError && (
+                <div className="field-error-msg">
+                  <span className="field-error-icon">!</span>
+                  {emailError}
+                </div>
+              )}
             </div>
           </div>
 
@@ -240,11 +265,16 @@ export default function Auth({ onLogin }) {
                 id="auth-password"
                 type="password"
                 placeholder="••••••••"
-                className="form-input"
+                className={`form-input ${passwordError ? 'input-error' : ''}`}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+                onChange={(e) => { setPassword(e.target.value); if (passwordError) setPasswordError(''); }}
               />
+              {passwordError && (
+                <div className="field-error-msg">
+                  <span className="field-error-icon">!</span>
+                  {passwordError}
+                </div>
+              )}
             </div>
           </div>
 

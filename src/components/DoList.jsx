@@ -11,7 +11,8 @@ export default function DoList({
 }) {
   const [time, setTime] = useState('');
   const [text, setText] = useState('');
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [textError, setTextError] = useState('');
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -60,7 +61,12 @@ export default function DoList({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!time.trim() || !text.trim()) return;
+    setTextError('');
+    if (!text.trim()) {
+      setTextError('Please describe your activity.');
+      return;
+    }
+    if (!time.trim()) return;
 
     onAddDo(time.trim(), text.trim());
     setText('');
@@ -141,14 +147,14 @@ export default function DoList({
 
   return (
     <div className="do-container">
-      {/* If mobile, render the form at the top of the timeline */}
-      {isMobile && (
+      {/* If mobile, render the form at top — only when viewing today */}
+      {isMobile && selectedDate === todayStr && (
         <div className="glass-panel do-form-card mobile-do-form" style={{ marginBottom: '20px', padding: '16px' }}>
           <h4 className="todo-form-title" style={{ marginBottom: '16px', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Activity size={18} style={{ color: 'var(--primary)' }} />
             <span>Log Daily Activity</span>
           </h4>
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr', gap: '10px' }}>
               <input
                 type="text"
@@ -156,23 +162,35 @@ export default function DoList({
                 placeholder="Time"
                 value={time}
                 readOnly
-                required
                 style={{ cursor: 'default' }}
               />
-              <input
-                type="text"
-                className="form-input"
-                placeholder="What did you do?"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="text"
+                  className={`form-input ${textError ? 'input-error' : ''}`}
+                  placeholder="What did you do?"
+                  value={text}
+                  onChange={(e) => { setText(e.target.value); if (textError) setTextError(''); }}
+                />
+                {textError && (
+                  <div className="field-error-msg">
+                    <span className="field-error-icon">!</span>
+                    {textError}
+                  </div>
+                )}
+              </div>
             </div>
             <button type="submit" className="btn btn-primary" style={{ padding: '8px 12px', justifyContent: 'center' }}>
               <Plus size={16} />
               <span>Add Log</span>
             </button>
           </form>
+        </div>
+      )}
+      {/* Past day notice for Day Manager mobile */}
+      {isMobile && selectedDate !== todayStr && (
+        <div className="past-day-notice fade-in" style={{ marginBottom: '16px' }}>
+          <span>📅 Viewing a past day — new logs can only be added on today</span>
         </div>
       )}
 

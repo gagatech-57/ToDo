@@ -9,11 +9,17 @@ export default function TodoForm({
   onUpdateTodo,
   onCancelEdit
 }) {
+  // Always default to today's date for new tasks
+  const getTodayStr = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [catId, setCatId] = useState('');
   const [priority, setPriority] = useState('medium');
   const [dueDate, setDueDate] = useState('');
+  const [titleError, setTitleError] = useState('');
   
   // Subtasks list state for this todo item
   const [subtasks, setSubtasks] = useState([]);
@@ -47,6 +53,7 @@ export default function TodoForm({
     }
   }, [activeCategory, categories, editingTodo]);
 
+
   const resetForm = () => {
     setTitle('');
     setDesc('');
@@ -54,7 +61,7 @@ export default function TodoForm({
     const isSystemList = ['all', 'today', 'scheduled', 'important'].includes(activeCategory);
     setCatId(isSystemList ? (categories[0]?.id || '') : activeCategory);
     setPriority('medium');
-    setDueDate('');
+    setDueDate(getTodayStr());
     setSubtasks([]);
     setSubtaskText('');
   };
@@ -84,7 +91,11 @@ export default function TodoForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title.trim()) return;
+    setTitleError('');
+    if (!title.trim()) {
+      setTitleError('Task title is required.');
+      return;
+    }
 
     let finalSubtasks = [...subtasks];
     if (subtaskText.trim()) {
@@ -137,20 +148,27 @@ export default function TodoForm({
         </button>
       </h3>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         {/* Title */}
         <div className="form-group">
           <label htmlFor="todo-title">Task Title *</label>
-          <input
-            id="todo-title"
-            type="text"
-            className="form-input"
-            placeholder="e.g. Design app interface"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            maxLength={60}
-          />
+          <div style={{ position: 'relative' }}>
+            <input
+              id="todo-title"
+              type="text"
+              className={`form-input ${titleError ? 'input-error' : ''}`}
+              placeholder="e.g. Design app interface"
+              value={title}
+              onChange={(e) => { setTitle(e.target.value); if (titleError) setTitleError(''); }}
+              maxLength={60}
+            />
+            {titleError && (
+              <div className="field-error-msg">
+                <span className="field-error-icon">!</span>
+                {titleError}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Description */}

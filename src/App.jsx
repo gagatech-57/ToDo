@@ -33,6 +33,11 @@ export default function App() {
   const [todos, setTodos] = useState([]);
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Clear search query when changing active category / workspace
+  useEffect(() => {
+    setSearchQuery('');
+  }, [activeCategory]);
   const [editingTodo, setEditingTodo] = useState(null);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -560,6 +565,13 @@ export default function App() {
 
   const filteredStatsTodos = getFilteredTodosForStats();
 
+  // Compute today string for add-restriction logic
+  const appTodayStr = (() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  })();
+  const isTodaySelected = selectedDate === appTodayStr;
+
   const filteredDos = dos.filter(item => 
     item.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.time.toLowerCase().includes(searchQuery.toLowerCase())
@@ -622,7 +634,8 @@ export default function App() {
           {(!isMobile || activeCategory !== 'dos') && (
             <div className="dashboard-left">
               {activeCategory === 'dos' ? (
-                <DoFormDesktop onAddDo={handleAddDo} />
+                /* Day Manager desktop form — only on today */
+                isTodaySelected && <DoFormDesktop onAddDo={handleAddDo} />
               ) : (
                 <>
                   <StatsSection 
@@ -631,8 +644,19 @@ export default function App() {
                     setActiveCategory={setActiveCategory}
                   />
                   
-                  {/* Show static form on BIG SCREEN only */}
-                  {!isMobile && (
+                  {/* Show static form on BIG SCREEN only, and only on today */}
+                  {!isMobile && isTodaySelected && (
+                    <TodoForm
+                      categories={categories}
+                      activeCategory={activeCategory}
+                      onAddTodo={handleAddTodo}
+                      editingTodo={editingTodo}
+                      onUpdateTodo={handleUpdateTodo}
+                      onCancelEdit={() => setEditingTodo(null)}
+                    />
+                  )}
+                  {/* Show editing form even on past days */}
+                  {!isMobile && !isTodaySelected && editingTodo && (
                     <TodoForm
                       categories={categories}
                       activeCategory={activeCategory}
@@ -673,6 +697,8 @@ export default function App() {
                 }
               }}
               onToggleSubtask={handleToggleSubtask}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
             />
           )}
         </div>
@@ -709,8 +735,8 @@ export default function App() {
         </div>
       )}
 
-      {/* Floating Action Button (FAB) on Mobile */}
-      {isMobile && user && activeCategory !== 'dos' && (
+      {/* Floating Action Button (FAB) on Mobile — only on today */}
+      {isMobile && user && activeCategory !== 'dos' && isTodaySelected && (
         <button 
           className="mobile-fab"
           onClick={() => setIsFormOpen(true)}
@@ -881,6 +907,7 @@ export default function App() {
 function DoFormDesktop({ onAddDo }) {
   const [time, setTime] = useState('');
   const [text, setText] = useState('');
+  const [textError, setTextError] = useState('');
 
   const getCurrentTime = () => {
     const now = new Date();
@@ -899,7 +926,12 @@ function DoFormDesktop({ onAddDo }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!time.trim() || !text.trim()) return;
+    setTextError('');
+    if (!text.trim()) {
+      setTextError('Please describe your activity.');
+      return;
+    }
+    if (!time.trim()) return;
     onAddDo(time.trim(), text.trim());
     setText('');
     setTime(getCurrentTime());
@@ -911,7 +943,7 @@ function DoFormDesktop({ onAddDo }) {
         <Activity size={20} style={{ color: 'var(--primary)' }} />
         <span>Log Daily Activity</span>
       </h3>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-group" style={{ marginBottom: '16px' }}>
           <label htmlFor="do-time" style={{ display: 'block', marginBottom: '8px', fontSize: '0.82rem', fontWeight: 600 }}>Time</label>
           <input
@@ -921,22 +953,28 @@ function DoFormDesktop({ onAddDo }) {
             placeholder="e.g. 04:21 PM"
             value={time}
             readOnly
-            required
             style={{ width: '100%', cursor: 'default' }}
           />
         </div>
         <div className="form-group" style={{ marginBottom: '20px' }}>
           <label htmlFor="do-text" style={{ display: 'block', marginBottom: '8px', fontSize: '0.82rem', fontWeight: 600 }}>Activity description</label>
-          <input
-            id="do-text"
-            type="text"
-            className="form-input"
-            placeholder="What did you do?"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            required
-            style={{ width: '100%' }}
-          />
+          <div style={{ position: 'relative' }}>
+            <input
+              id="do-text"
+              type="text"
+              className={`form-input ${textError ? 'input-error' : ''}`}
+              placeholder="What did you do?"
+              value={text}
+              onChange={(e) => { setText(e.target.value); if (textError) setTextError(''); }}
+              style={{ width: '100%' }}
+            />
+            {textError && (
+              <div className="field-error-msg">
+                <span className="field-error-icon">!</span>
+                {textError}
+              </div>
+            )}
+          </div>
         </div>
         <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '10px 16px', justifyContent: 'center' }}>
           <Plus size={16} />

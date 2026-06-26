@@ -172,10 +172,11 @@ h1, h2, h3, h4, h5, h6 {
 /* App Layout */
 .app-container {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
   background: transparent;
 }
 
@@ -410,6 +411,7 @@ select option {
   overflow: hidden;
   padding: 32px;
   background: transparent;
+  gap: 28px; /* Gap between sticky header and dashboard grid */
 }
 
 .dashboard-grid {
@@ -418,7 +420,6 @@ select option {
   gap: 32px;
   flex: 1;
   overflow: hidden;
-  margin-top: 24px;
   min-height: 0; /* Prevents container from overflowing flex height limits */
 }
 
@@ -617,6 +618,9 @@ select option {
   -webkit-backdrop-filter: var(--glass-blur);
   box-shadow: var(--card-shadow);
   gap: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .header-left {
@@ -1160,6 +1164,21 @@ select option {
 }
 
 /* Empty State Styling */
+/* Past Day Read-Only Banner */
+.past-day-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: var(--warning);
+  font-size: 0.82rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -1198,17 +1217,22 @@ select option {
 /* Responsive Breakpoints */
 @media (max-width: 1024px) {
   .dashboard-grid {
-    grid-template-columns: 1fr;
-    overflow-y: visible;
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none;
+    gap: 24px;
+    overflow-y: auto;
   }
   
   .dashboard-left {
     overflow-y: visible;
+    min-height: auto;
   }
   
   .dashboard-right {
     overflow: visible;
     height: auto;
+    min-height: auto;
   }
   
   .todo-items-list {
@@ -1216,10 +1240,31 @@ select option {
     max-height: none;
   }
   
+  .do-container {
+    height: auto;
+    min-height: auto;
+    flex: none;
+  }
+  
+  .do-timeline-wrapper {
+    overflow-y: visible;
+    overflow: visible;
+    height: auto;
+    min-height: auto;
+    flex: none;
+    padding-bottom: 20px;
+  }
+  
   .main-workspace {
-    overflow-y: auto;
+    overflow: hidden;
     height: 100vh;
+    height: 100dvh;
     padding: 24px;
+    gap: 20px; /* Space between header and grid */
+  }
+  
+  .header {
+    top: 0;
   }
 }
 
@@ -1232,7 +1277,7 @@ select option {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 1000; /* Higher than header z-index */
     transform: translateX(-100%);
     box-shadow: none;
     background: var(--bg-primary) !important;
@@ -1251,7 +1296,7 @@ select option {
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 99;
+    z-index: 999; /* Higher than header z-index */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
@@ -1262,7 +1307,14 @@ select option {
   
   .main-workspace {
     padding: 16px;
-    padding-bottom: 90px !important;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    gap: 16px; /* Gap between header and grid */
+  }
+
+  .dashboard-grid {
+    padding-bottom: 90px;
   }
   
   .mobile-nav-toggle {
@@ -1282,6 +1334,7 @@ select option {
     gap: 12px;
     align-items: center;
     padding: 12px 16px;
+    top: 0;
   }
   
   .header-left {
@@ -1329,9 +1382,28 @@ select option {
 @media (max-width: 480px) {
   .main-workspace {
     padding: 12px 8px;
-    padding-bottom: 95px !important;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    gap: 12px; /* Gap between header and grid */
+  }
+  
+  .dashboard-grid {
+    padding-bottom: 95px;
+  }
+
+  .do-container {
     height: auto;
-    overflow-y: visible;
+    min-height: auto;
+    flex: none;
+  }
+
+  .do-timeline-wrapper {
+    overflow: visible;
+    height: auto;
+    min-height: auto;
+    flex: none;
+    padding-bottom: 24px;
   }
   
   .auth-card {
@@ -1357,6 +1429,7 @@ select option {
     padding: 12px 14px;
     border-radius: var(--radius-sm);
     gap: 10px;
+    top: 12px;
   }
   
   .header-welcome h2 {
@@ -2483,3 +2556,68 @@ select option {
 .day-manager-stat-card:active {
   transform: scale(0.98);
 }
+
+/* Custom Form Validation Tooltips */
+.form-input.input-error {
+  border-color: var(--danger) !important;
+  background-color: rgba(255, 59, 48, 0.05) !important;
+  box-shadow: 0 0 0 2px rgba(255, 59, 48, 0.15) !important;
+}
+
+.field-error-msg {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 6px;
+  background: rgba(26, 26, 36, 0.95);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  animation: tooltipFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.field-error-msg::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 15px;
+  border-width: 0 5px 5px;
+  border-style: solid;
+  border-color: transparent transparent var(--danger);
+}
+
+.field-error-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  background-color: var(--danger);
+  color: #ffffff;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
